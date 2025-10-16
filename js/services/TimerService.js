@@ -421,14 +421,19 @@ export class TimerService {
       return;
     }
 
-    // アラートポイントをチェック
+    // アラートポイントをチェック（AlertPoint形式対応）
     for (const point of this._alertConfig.points) {
+      // 旧形式（number）と新形式（AlertPoint）の両方に対応
+      const pointSeconds = typeof point === 'number' ? point : point.seconds;
+      const soundType = typeof point === 'number' ? 'gong' : point.soundType;
+
       // 現在の秒数がアラートポイントと一致し、まだ発火していない場合
-      if (currentSecond === point && !this._firedAlertPoints.has(point)) {
-        this._firedAlertPoints.add(point);
+      if (currentSecond === pointSeconds && !this._firedAlertPoints.has(pointSeconds)) {
+        this._firedAlertPoints.add(pointSeconds);
         this._emit('alert', {
           remainingSeconds: currentSecond,
-          alertPoint: point,
+          alertPoint: pointSeconds,
+          soundType: soundType,
         });
       }
     }

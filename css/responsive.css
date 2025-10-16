@@ -68,10 +68,10 @@
 }
 
 /* ==========================================================================
-   Mobile Portrait (縦向き) - 320px ~ 767px
+   Small Screens - 320px ~ 899px (縦横両方対応)
    ========================================================================== */
 
-@media (max-width: 767px) and (orientation: portrait) {
+@media (max-width: 899px) {
   :root {
     --font-size-display: 6rem;
     --font-size-xl: 1.5rem;
@@ -131,24 +131,21 @@
    Mobile Landscape (横向き) - 568px ~ 926px (height)
    ========================================================================== */
 
-@media (max-width: 926px) and (orientation: landscape) {
+@media (max-width: 926px) and (orientation: landscape) and (min-height: 400px) {
   :root {
-    --font-size-display: 5rem;
-    --spacing-xl: 1rem;
-    --spacing-lg: 0.75rem;
+    --font-size-display: 4rem;
+    --spacing-xl: 0.75rem;
+    --spacing-lg: 0.5rem;
   }
 
   .app-container {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-sm);
-    gap: var(--spacing-md);
+    padding: var(--spacing-xs);
+    gap: var(--spacing-sm);
+    overflow-y: auto; /* スクロール可能に */
   }
 
   .timer-display {
-    flex: 1;
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
   }
 
   .timer-display__time {
@@ -156,26 +153,34 @@
   }
 
   .timer-display__status {
-    margin-top: var(--spacing-sm);
-    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
   }
 
   .control-panel {
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--spacing-xs);
-    max-width: 200px;
+    max-width: 100%;
   }
 
   .btn {
-    width: 100%;
     min-width: auto;
-    min-height: 40px;
+    min-height: 36px;
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
   }
 
   .settings-panel {
-    display: none; /* 横向きでは設定パネルを非表示 */
+    padding: var(--spacing-sm);
+    max-width: 100%;
+  }
+
+  .settings-panel__title {
+    font-size: var(--font-size-md);
+  }
+
+  .alert-point-item {
+    flex-wrap: wrap; /* 小さい画面では折り返し */
   }
 }
 

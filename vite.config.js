@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: '.',
-  base: '/presentation-timer/',
+  base: process.env.NODE_ENV === 'production' ? '/presentation-timer/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

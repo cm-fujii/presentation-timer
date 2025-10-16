@@ -5,7 +5,12 @@
  */
 
 import { createDefaultTimerConfig, isValidTimerConfig } from '../models/TimerConfig.js';
-import { createDefaultAlertConfig, isValidAlertConfig } from '../models/AlertConfig.js';
+import {
+  createDefaultAlertConfig,
+  isValidAlertConfig,
+  createAlertPoint,
+} from '../models/AlertConfig.js';
+import { SoundType } from '../models/SoundType.js';
 
 /**
  * StorageService - localStorage を使用したデータ永続化サービス
@@ -120,6 +125,58 @@ export class StorageService {
   }
 
   /**
+   * 旧形式のAlertConfigを新形式にマイグレーションする
+   *
+   * @param {Object} config - マイグレーション対象の設定
+   * @returns {import('../models/AlertConfig.js').AlertConfig} マイグレーション済みの設定
+   *
+   * @description
+   * 旧形式（points: number[]）を新形式（points: AlertPoint[]）に変換します。
+   * - 旧形式の場合: 各numberをAlertPointに変換（soundTypeはGONGをデフォルト）
+   * - 新形式の場合: そのまま返す
+   * - 無効な設定の場合: デフォルト設定を返す
+   *
+   * @example
+   * ```javascript
+   * // 旧形式の変換
+   * const oldConfig = { enabled: true, volume: 0.8, points: [60, 0] };
+   * const migrated = StorageService.migrateAlertConfig(oldConfig);
+   * // { enabled: true, volume: 0.8, points: [
+   * //   { seconds: 60, soundType: 'gong' },
+   * //   { seconds: 0, soundType: 'gong' }
+   * // ]}
+   * ```
+   *
+   * @since 1.0.0
+   */
+  static migrateAlertConfig(config) {
+    // 基本的な検証
+    if (!config || typeof config !== 'object' || !Array.isArray(config.points)) {
+      console.warn('Invalid config structure, using default');
+      return createDefaultAlertConfig();
+    }
+
+    // 空配列の場合はそのまま返す
+    if (config.points.length === 0) {
+      return { ...config, points: [] };
+    }
+
+    // 旧形式を検出: points が number[] の場合
+    if (typeof config.points[0] === 'number') {
+      console.info('Migrating old alert config format to new format');
+      return {
+        ...config,
+        points: config.points.map((seconds) =>
+          createAlertPoint(seconds, SoundType.GONG)
+        ),
+      };
+    }
+
+    // 新形式の場合はそのまま返す
+    return config;
+  }
+
+  /**
    * アラート設定を読み込む
    *
    * @returns {import('../models/AlertConfig.js').AlertConfig} アラート設定。保存されていない場合はデフォルト設定
@@ -128,7 +185,7 @@ export class StorageService {
    * ```javascript
    * const config = StorageService.loadAlertConfig();
    * console.log(config.enabled); // true
-   * console.log(config.points); // [60, 0]
+   * console.log(config.points); // [{ seconds: 60, soundType: 'gong' }, ...]
    * ```
    */
   static loadAlertConfig() {
@@ -139,12 +196,17 @@ export class StorageService {
       }
 
       const config = JSON.parse(stored);
-      if (!isValidAlertConfig(config)) {
-        console.warn('Invalid stored alert config, using default');
+
+      // マイグレーションを実行
+      const migratedConfig = this.migrateAlertConfig(config);
+
+      // マイグレーション後の検証
+      if (!isValidAlertConfig(migratedConfig)) {
+        console.warn('Invalid stored alert config after migration, using default');
         return createDefaultAlertConfig();
       }
 
-      return config;
+      return migratedConfig;
     } catch (error) {
       console.error('Failed to load alert config:', error);
       return createDefaultAlertConfig();

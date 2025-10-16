@@ -73,7 +73,15 @@ describe('StorageService', () => {
 
   describe('saveAlertConfig / loadAlertConfig', () => {
     it('should save and load alert config correctly', () => {
-      const config = { enabled: true, volume: 0.5, points: [180, 60, 0] };
+      const config = {
+        enabled: true,
+        volume: 0.5,
+        points: [
+          { seconds: 180, soundType: 'gong' },
+          { seconds: 60, soundType: 'bell' },
+          { seconds: 0, soundType: 'gong' },
+        ],
+      };
 
       StorageService.saveAlertConfig(config);
       const loaded = StorageService.loadAlertConfig();
@@ -108,9 +116,30 @@ describe('StorageService', () => {
 
     it('should handle volume boundary values correctly', () => {
       const configs = [
-        { enabled: true, volume: 0.0, points: [60, 0] },
-        { enabled: true, volume: 1.0, points: [60, 0] },
-        { enabled: true, volume: 0.5, points: [60, 0] },
+        {
+          enabled: true,
+          volume: 0.0,
+          points: [
+            { seconds: 60, soundType: 'gong' },
+            { seconds: 0, soundType: 'gong' },
+          ],
+        },
+        {
+          enabled: true,
+          volume: 1.0,
+          points: [
+            { seconds: 60, soundType: 'gong' },
+            { seconds: 0, soundType: 'gong' },
+          ],
+        },
+        {
+          enabled: true,
+          volume: 0.5,
+          points: [
+            { seconds: 60, soundType: 'gong' },
+            { seconds: 0, soundType: 'gong' },
+          ],
+        },
       ];
 
       configs.forEach((config) => {
@@ -134,7 +163,14 @@ describe('StorageService', () => {
   describe('clear', () => {
     it('should clear all stored data', () => {
       const timerConfig = { durationMinutes: 10, durationSeconds: 30 };
-      const alertConfig = { enabled: true, volume: 0.8, points: [60, 0] };
+      const alertConfig = {
+        enabled: true,
+        volume: 0.8,
+        points: [
+          { seconds: 60, soundType: 'gong' },
+          { seconds: 0, soundType: 'gong' },
+        ],
+      };
 
       StorageService.saveTimerConfig(timerConfig);
       StorageService.saveAlertConfig(alertConfig);

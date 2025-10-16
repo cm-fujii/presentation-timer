@@ -8,20 +8,27 @@
  * AudioService - アラート音の再生を管理するサービス
  *
  * @description
- * Web Audio APIを使用してアラート音を再生します。
+ * Web Audio APIを使用して複数のアラート音を再生します。
  * Safari対応のため、ユーザーインタラクション後に初期化します。
  *
  * @example
  * ```javascript
+ * import { SoundType } from '../models/SoundType.js';
  * const audioService = new AudioService();
  *
  * // ユーザーインタラクション後に初期化
  * document.addEventListener('click', async () => {
- *   await audioService.initialize('/assets/sounds/alert.mp3');
+ *   await audioService.initialize([
+ *     { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
+ *     { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' }
+ *   ]);
  * }, { once: true });
  *
  * // 音声を再生
- * audioService.play();
+ * audioService.play(SoundType.BELL);
+ *
+ * // 音声をプレビュー
+ * audioService.preview(SoundType.GONG);
  *
  * // 音量を変更
  * audioService.setVolume(0.5);
@@ -40,11 +47,11 @@ export class AudioService {
     this._audioContext = null;
 
     /**
-     * デコード済みの音声バッファ
+     * 音の種類ごとのデコード済み音声バッファのマップ
      * @private
-     * @type {AudioBuffer | null}
+     * @type {Map<string, AudioBuffer>}
      */
-    this._audioBuffer = null;
+    this._audioBuffers = new Map();
 
     /**
      * 音量ノード
@@ -52,6 +59,13 @@ export class AudioService {
      * @type {GainNode | null}
      */
     this._gainNode = null;
+
+    /**
+     * プレビュー再生中のソースノード
+     * @private
+     * @type {AudioBufferSourceNode | null}
+     */
+    this._previewSource = null;
 
     /**
      * 音量（0.0～1.0）
@@ -71,21 +85,25 @@ export class AudioService {
   /**
    * AudioServiceを初期化する
    *
-   * @param {string} audioUrl - 音声ファイルのURL
+   * @param {Array<{type: string, url: string}>} soundConfigs - 音声ファイルの設定配列
    * @returns {Promise<void>}
    *
    * @description
-   * Web Audio Contextを作成し、音声ファイルを読み込んでデコードします。
+   * Web Audio Contextを作成し、複数の音声ファイルを読み込んでデコードします。
    * Safari対応のため、ユーザーインタラクション後に呼び出す必要があります。
    *
    * @example
    * ```javascript
+   * import { SoundType } from '../models/SoundType.js';
    * const audioService = new AudioService();
    *
    * // ユーザークリック後に初期化
    * document.addEventListener('click', async () => {
    *   try {
-   *     await audioService.initialize('/assets/sounds/alert.mp3');
+   *     await audioService.initialize([
+   *       { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
+   *       { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' }
+   *     ]);
    *     console.log('AudioService initialized');
    *   } catch (error) {
    *     console.error('Failed to initialize:', error);
@@ -93,7 +111,7 @@ export class AudioService {
    * }, { once: true });
    * ```
    */
-  async initialize(audioUrl) {
+  async initialize(soundConfigs) {
     if (this._initialized) {
       return; // 既に初期化済み
     }
@@ -112,8 +130,16 @@ export class AudioService {
       this._gainNode.connect(this._audioContext.destination);
       this._gainNode.gain.value = this._volume;
 
-      // 音声ファイルを読み込んでデコード
-      await this._loadAndDecodeAudio(audioUrl);
+      // 複数の音声ファイルを読み込んでデコード
+      for (const config of soundConfigs) {
+        try {
+          const buffer = await this._loadAndDecodeAudio(config.url);
+          this._audioBuffers.set(config.type, buffer);
+        } catch (error) {
+          console.error(`Failed to load sound: ${config.type}`, error);
+          // エラーが発生しても他の音声は読み込み続ける
+        }
+      }
 
       this._initialized = true;
     } catch (error) {
@@ -127,7 +153,7 @@ export class AudioService {
    *
    * @private
    * @param {string} audioUrl - 音声ファイルのURL
-   * @returns {Promise<void>}
+   * @returns {Promise<AudioBuffer>} デコードされた音声バッファ
    */
   async _loadAndDecodeAudio(audioUrl) {
     try {
@@ -140,7 +166,7 @@ export class AudioService {
       const arrayBuffer = await response.arrayBuffer();
 
       // AudioBufferにデコード
-      this._audioBuffer = await this._audioContext.decodeAudioData(arrayBuffer);
+      return await this._audioContext.decodeAudioData(arrayBuffer);
     } catch (error) {
       console.error('Failed to load and decode audio:', error);
       throw error;
@@ -150,18 +176,28 @@ export class AudioService {
   /**
    * アラート音を再生する
    *
+   * @param {string} soundType - 再生する音の種類 (SoundType.BELL または SoundType.GONG)
+   *
    * @description
-   * デコード済みの音声バッファを再生します。
-   * 初期化されていない場合は何もしません。
+   * 指定された種類の音声バッファを再生します。
+   * 初期化されていない場合や音声バッファが見つからない場合は何もしません。
    *
    * @example
    * ```javascript
-   * audioService.play(); // アラート音を再生
+   * import { SoundType } from '../models/SoundType.js';
+   * audioService.play(SoundType.BELL); // ベルの音を再生
+   * audioService.play(SoundType.GONG); // 銅鑼の音を再生
    * ```
    */
-  play() {
-    if (!this._initialized || !this._audioBuffer || !this._audioContext) {
+  play(soundType) {
+    if (!this._initialized || !this._audioContext) {
       console.warn('AudioService not initialized');
+      return;
+    }
+
+    const buffer = this._audioBuffers.get(soundType);
+    if (!buffer) {
+      console.warn(`Sound type not found: ${soundType}`);
       return;
     }
 
@@ -173,7 +209,7 @@ export class AudioService {
 
       // AudioBufferSourceNodeを作成
       const source = this._audioContext.createBufferSource();
-      source.buffer = this._audioBuffer;
+      source.buffer = buffer;
       source.connect(this._gainNode);
 
       // 再生開始
@@ -240,6 +276,69 @@ export class AudioService {
   }
 
   /**
+   * アラート音をプレビュー再生する
+   *
+   * @param {string} soundType - プレビューする音の種類 (SoundType.BELL または SoundType.GONG)
+   *
+   * @description
+   * 指定された種類の音声をプレビュー再生します。
+   * 既にプレビュー再生中の音がある場合は停止してから新しい音を再生します。
+   *
+   * @example
+   * ```javascript
+   * import { SoundType } from '../models/SoundType.js';
+   * audioService.preview(SoundType.BELL); // ベルの音をプレビュー
+   * ```
+   */
+  preview(soundType) {
+    if (!this._initialized || !this._audioContext) {
+      console.warn('AudioService not initialized');
+      return;
+    }
+
+    // 既にプレビュー再生中の音があれば停止
+    if (this._previewSource) {
+      try {
+        this._previewSource.stop();
+      } catch (error) {
+        // 既に停止している場合のエラーは無視
+      }
+      this._previewSource = null;
+    }
+
+    const buffer = this._audioBuffers.get(soundType);
+    if (!buffer) {
+      console.warn(`Sound type not found: ${soundType}`);
+      return;
+    }
+
+    try {
+      // AudioContextがsuspended状態の場合はresume
+      if (this._audioContext.state === 'suspended') {
+        this._audioContext.resume();
+      }
+
+      // AudioBufferSourceNodeを作成
+      const source = this._audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(this._gainNode);
+
+      // 再生終了時のクリーンアップ
+      source.onended = () => {
+        this._previewSource = null;
+      };
+
+      // プレビューソースとして保存
+      this._previewSource = source;
+
+      // 再生開始
+      source.start(0);
+    } catch (error) {
+      console.error('Failed to preview audio:', error);
+    }
+  }
+
+  /**
    * AudioServiceをクリーンアップする
    *
    * @description
@@ -251,12 +350,22 @@ export class AudioService {
    * ```
    */
   dispose() {
+    // プレビュー再生中の音を停止
+    if (this._previewSource) {
+      try {
+        this._previewSource.stop();
+      } catch (error) {
+        // 既に停止している場合のエラーは無視
+      }
+      this._previewSource = null;
+    }
+
     if (this._audioContext) {
       this._audioContext.close();
       this._audioContext = null;
     }
 
-    this._audioBuffer = null;
+    this._audioBuffers.clear();
     this._gainNode = null;
     this._initialized = false;
   }
