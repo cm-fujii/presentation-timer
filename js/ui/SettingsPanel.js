@@ -316,6 +316,12 @@ export class SettingsPanel {
     pointsLabel.className = 'form-group__label';
     pointsLabel.textContent = 'Alert Points (seconds remaining)';
 
+    // デフォルト音の説明
+    const defaultSoundHint = document.createElement('p');
+    defaultSoundHint.className = 'form-group__hint';
+    defaultSoundHint.textContent = 'Default sound for new alert points: Gong (銅鑼)';
+    defaultSoundHint.setAttribute('aria-label', 'Default alert sound is Gong');
+
     this._alertPointsContainer = document.createElement('div');
     this._alertPointsContainer.className = 'alert-points-container';
 
@@ -327,6 +333,7 @@ export class SettingsPanel {
     addPointButton.addEventListener('click', () => this._addAlertPoint());
 
     pointsGroup.appendChild(pointsLabel);
+    pointsGroup.appendChild(defaultSoundHint);
     pointsGroup.appendChild(this._alertPointsContainer);
     pointsGroup.appendChild(addPointButton);
 

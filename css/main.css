@@ -299,6 +299,13 @@ input {
   color: var(--color-text-primary);
 }
 
+.form-group__hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-top: var(--spacing-xs);
+}
+
 .form-group__input {
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-lg);

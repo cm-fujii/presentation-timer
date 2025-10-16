@@ -198,6 +198,87 @@ describe('StorageService', () => {
     });
   });
 
+  describe('migrateAlertConfig', () => {
+    it('should migrate old format (number[]) to new format (AlertPoint[])', () => {
+      const oldConfig = {
+        enabled: true,
+        volume: 0.8,
+        points: [60, 30, 0],
+      };
+
+      const migrated = StorageService.migrateAlertConfig(oldConfig);
+
+      expect(migrated).toEqual({
+        enabled: true,
+        volume: 0.8,
+        points: [
+          { seconds: 60, soundType: 'gong' },
+          { seconds: 30, soundType: 'gong' },
+          { seconds: 0, soundType: 'gong' },
+        ],
+      });
+    });
+
+    it('should keep new format (AlertPoint[]) unchanged', () => {
+      const newConfig = {
+        enabled: true,
+        volume: 0.5,
+        points: [
+          { seconds: 120, soundType: 'bell' },
+          { seconds: 60, soundType: 'gong' },
+          { seconds: 0, soundType: 'bell' },
+        ],
+      };
+
+      const migrated = StorageService.migrateAlertConfig(newConfig);
+
+      expect(migrated).toEqual(newConfig);
+    });
+
+    it('should preserve enabled and volume properties', () => {
+      const oldConfig = {
+        enabled: false,
+        volume: 0.3,
+        points: [120, 60, 30],
+      };
+
+      const migrated = StorageService.migrateAlertConfig(oldConfig);
+
+      expect(migrated.enabled).toBe(false);
+      expect(migrated.volume).toBe(0.3);
+      expect(migrated.points).toHaveLength(3);
+      expect(migrated.points[0]).toEqual({ seconds: 120, soundType: 'gong' });
+    });
+
+    it('should return default config for invalid input', () => {
+      const invalidConfigs = [
+        null,
+        undefined,
+        {},
+        { enabled: true },
+        { enabled: true, volume: 0.8 },
+        { points: 'invalid' },
+      ];
+
+      invalidConfigs.forEach((invalidConfig) => {
+        const migrated = StorageService.migrateAlertConfig(invalidConfig);
+        expect(migrated).toEqual(createDefaultAlertConfig());
+      });
+    });
+
+    it('should handle empty points array', () => {
+      const config = {
+        enabled: false,
+        volume: 0.5,
+        points: [],
+      };
+
+      const migrated = StorageService.migrateAlertConfig(config);
+
+      expect(migrated).toEqual(config);
+    });
+  });
+
   describe('KEYS', () => {
     it('should have correct key names', () => {
       expect(StorageService.KEYS.TIMER_CONFIG).toBe('presentation-timer:config');

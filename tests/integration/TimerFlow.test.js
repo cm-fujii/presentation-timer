@@ -3,7 +3,9 @@
  * @description タイマーの統合テスト - TimerServiceとTimerDisplayの連携
  */
 
-import { describe, it } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { StorageService } from '../../js/services/StorageService.js';
+import { SoundType } from '../../js/models/SoundType.js';
 
 describe('TimerFlow Integration Tests', () => {
   describe('TimerDisplay - UI Update Logic', () => {
@@ -338,29 +340,28 @@ describe('TimerFlow Integration Tests', () => {
       // expect(previewedSound).toBe(SoundType.GONG);
     });
 
-    it.todo('should migrate old alert config to new format', () => {
-      // TODO: Implement migration flow
-      // // 旧形式のデータをlocalStorageに保存
-      // const oldConfig = {
-      //   enabled: true,
-      //   volume: 0.8,
-      //   points: [60, 0] // 旧形式: number[]
-      // };
-      //
-      // localStorage.setItem('presentation-timer:alert', JSON.stringify(oldConfig));
-      //
-      // // 読み込み時に自動マイグレーション
-      // const loaded = StorageService.loadAlertConfig();
-      //
-      // expect(loaded.points).toHaveLength(2);
-      // expect(loaded.points[0]).toEqual({
-      //   seconds: 60,
-      //   soundType: SoundType.GONG // デフォルトは銅鑼
-      // });
-      // expect(loaded.points[1]).toEqual({
-      //   seconds: 0,
-      //   soundType: SoundType.GONG
-      // });
+    it('should migrate old alert config to new format', () => {
+      // 旧形式のデータをlocalStorageに保存
+      const oldConfig = {
+        enabled: true,
+        volume: 0.8,
+        points: [60, 0] // 旧形式: number[]
+      };
+
+      localStorage.setItem('presentation-timer:alert', JSON.stringify(oldConfig));
+
+      // 読み込み時に自動マイグレーション
+      const loaded = StorageService.loadAlertConfig();
+
+      expect(loaded.points).toHaveLength(2);
+      expect(loaded.points[0]).toEqual({
+        seconds: 60,
+        soundType: SoundType.GONG // デフォルトは銅鑼
+      });
+      expect(loaded.points[1]).toEqual({
+        seconds: 0,
+        soundType: SoundType.GONG
+      });
     });
 
     it.todo('should handle multiple alert points with different sounds', () => {
