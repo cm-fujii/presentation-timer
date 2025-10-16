@@ -121,7 +121,7 @@
 - [x] T047 [US2] TimerService にマイナス時間継続ロジックを実装（0秒以降もカウント継続）
 - [x] T048 [US2] formatTime 関数にマイナス時間対応を追加（負の値の処理）
 - [x] T049 [US2] TimerDisplay.update() メソッドに赤色表示ロジックを追加（isNegative フラグ）
-- [x] T050 [US2] css/main.css に赤色表示スタイルクラスを追加（.timer-display__time--negative、コントラスト比4.5:1以上）
+- [x] T050 [US2] css/main.css に赤色表示スタイルクラスを追加（.timer-display\_\_time--negative、コントラスト比4.5:1以上）
 - [x] T051 [US2] css/main.css にマイナス時間のアニメーション効果を追加（pulse アニメーション）
 - [x] T052 [US2] リセット時に赤色表示をクリアするロジックを TimerDisplay に実装
 - [x] T053 [US2] すべてのテストを実行し、User Story 2が独立して動作することを検証

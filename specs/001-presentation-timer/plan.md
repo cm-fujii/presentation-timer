@@ -18,22 +18,23 @@
 **Target Platform**: iPad Safari（iOS 15+）、モダンブラウザ全般対応
 **Project Type**: web（シングルページアプリケーション）
 **Performance Goals**:
-  - Time to Interactive (TTI): 1秒以内
-  - First Contentful Paint (FCP): 0.5秒以内
-  - タイマー更新遅延: 50ms以内（実時間との誤差1秒以内を保証）
-**Constraints**:
-  - オフライン対応（Service Worker + Cache API）
-  - バンドルサイズ: 50KB以内（gzip圧縮後）
-  - メモリ使用量: 10MB以内
-  - バッテリー効率: requestAnimationFrameではなくsetIntervalを使用
-**Scale/Scope**:
-  - 1画面のみ（シンプルなSPA）
-  - 同時ユーザー数: 制限なし（完全クライアントサイド）
-  - 複雑度: 低（約500行のJavaScript想定）
+
+- Time to Interactive (TTI): 1秒以内
+- First Contentful Paint (FCP): 0.5秒以内
+- タイマー更新遅延: 50ms以内（実時間との誤差1秒以内を保証）
+  **Constraints**:
+- オフライン対応（Service Worker + Cache API）
+- バンドルサイズ: 50KB以内（gzip圧縮後）
+- メモリ使用量: 10MB以内
+- バッテリー効率: requestAnimationFrameではなくsetIntervalを使用
+  **Scale/Scope**:
+- 1画面のみ（シンプルなSPA）
+- 同時ユーザー数: 制限なし（完全クライアントサイド）
+- 複雑度: 低（約500行のJavaScript想定）
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### I. コード品質第一 ✅
 
@@ -157,6 +158,7 @@ specs/001-presentation-timer/
 GitHub Pages用の静的サイト構造を採用。ルートディレクトリに`index.html`を配置し、`js/`以下にモジュール化されたJavaScriptコードを配置します。
 
 **理由**:
+
 1. **GitHub Pages互換**: ルートまたは`docs/`フォルダからホスティング可能（今回はルートを選択）
 2. **シンプルさ**: ビルドプロセス不要、直接ブラウザで実行可能
 3. **モジュール構造**: ES Modulesを使用し、責任ごとにファイルを分割
@@ -165,7 +167,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 
 ## Complexity Tracking
 
-*Fill ONLY if Constitution Check has violations that must be justified*
+_Fill ONLY if Constitution Check has violations that must be justified_
 
 **該当なし**: すべての憲法原則を満たしており、違反はございません。
 
@@ -173,7 +175,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 
 ## Post-Design Constitution Re-Check
 
-*Phase 1完了後の再評価*
+_Phase 1完了後の再評価_
 
 ### 設計成果物レビュー
 
@@ -189,6 +191,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 #### I. コード品質第一 ✅
 
 **設計段階での保証**:
+
 - JSDoc完備のAPI契約定義
 - 明確な型定義（data-model.md）
 - モジュール化された責任分離（MVS構造）
@@ -201,6 +204,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 #### II. テスト駆動開発 ✅
 
 **設計段階での保証**:
+
 - コントラクトテストの例を提示（contracts/api.md）
 - テスト構成の明示（unit/integration/e2e）
 - TDDワークフローをquickstart.mdで説明
@@ -213,6 +217,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 #### III. ユーザー体験の一貫性 ✅
 
 **設計段階での保証**:
+
 - アクセシビリティ要件を明示（WCAG 2.1 Level AA）
 - レスポンシブデザインの構造化
 - エラーハンドリング戦略の文書化
@@ -225,6 +230,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 #### IV. パフォーマンス基準 ✅
 
 **設計段階での保証**:
+
 - パフォーマンス予算を設定（50KB、TTI < 1秒）
 - 軽量技術スタック（バニラJS、依存なし）
 - 最適化戦略の文書化（メモリ管理、DOM更新最小化）
@@ -237,6 +243,7 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 #### V. ドキュメンテーション卓越性 ✅
 
 **設計段階での成果**:
+
 - 4つの包括的な設計ドキュメント生成
 - API契約の完全なJSDoc仕様
 - 開発ガイド（quickstart.md）作成
@@ -251,8 +258,8 @@ GitHub Pages用の静的サイト構造を採用。ルートディレクトリ�
 設計段階で作成されたすべての成果物が憲法原則に準拠していますわ。実装フェーズ（`/speckit.tasks`と`/speckit.implement`）に進む準備が整っております。
 
 **特筆事項**:
+
 - 違反・例外なし
 - 複雑性の追加なし
 - シンプルで保守性の高い設計
 - すべての品質ゲートがクリア可能な構造
-

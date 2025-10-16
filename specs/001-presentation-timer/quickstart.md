@@ -91,6 +91,7 @@ npm run test:watch
 ```
 
 **開発サーバー**:
+
 - URL: `http://localhost:5173`
 - ファイル変更時に自動リロード
 - ES Modulesをネイティブサポート
@@ -115,6 +116,7 @@ npm run check-all
 
 **Pre-commit Hook**:
 Git commitの前に自動的に以下が実行されます:
+
 - ESLint
 - Prettier
 - 変更ファイルのユニットテスト
@@ -175,6 +177,7 @@ npm run preview
 **ビルド成果物**: `dist/`ディレクトリ（GitHub Pagesデプロイ用）
 
 **最適化**:
+
 - HTMLミニファイ
 - CSSミニファイ
 - JSモジュールの結合
@@ -207,6 +210,7 @@ describe('NewFeature', () => {
 ```
 
 **テストを実行して失敗を確認**:
+
 ```bash
 npm test NewFeature.test.js
 # ❌ FAIL (期待通り)
@@ -227,6 +231,7 @@ export class NewFeature {
 ```
 
 **テストを実行して成功を確認**:
+
 ```bash
 npm test NewFeature.test.js
 # ✅ PASS
@@ -252,6 +257,7 @@ export class NewFeature {
 ```
 
 **テストが引き続きパスすることを確認**:
+
 ```bash
 npm test NewFeature.test.js
 # ✅ PASS
@@ -276,6 +282,7 @@ git push origin 001-presentation-timer
 ```
 
 **Conventional Commits形式**:
+
 - `feat(scope): description` - 新機能
 - `fix(scope): description` - バグ修正
 - `test(scope): description` - テスト追加
@@ -296,6 +303,7 @@ gh pr create --title "001: プレゼンテーション・タイマー" \
 ```
 
 **PRチェックリスト**:
+
 - [ ] すべてのテストがパス
 - [ ] コードカバレッジ80%以上
 - [ ] ESLint/Prettier通過
@@ -320,6 +328,7 @@ gh pr create --title "001: プレゼンテーション・タイマー" \
 ```
 
 **自動デプロイフロー**:
+
 1. `main`ブランチへのマージ検知
 2. テスト実行（すべてパス必須）
 3. プロダクションビルド
@@ -333,6 +342,7 @@ gh pr create --title "001: プレゼンテーション・タイマー" \
 ### 問題: `npm ci` が失敗する
 
 **解決策**:
+
 ```bash
 # package-lock.json を削除して再生成
 rm package-lock.json
@@ -344,6 +354,7 @@ npm install
 ### 問題: 開発サーバーが起動しない
 
 **解決策**:
+
 ```bash
 # ポート5173が使用中の場合、別のポートを指定
 npm run dev -- --port 3000
@@ -356,6 +367,7 @@ npm run dev -- --port 3000
 **原因**: Safari の自動再生ポリシー
 
 **解決策**:
+
 - `AudioService.initialize()` がユーザーインタラクション後に呼ばれていることを確認
 - タイマー開始ボタンのクリックイベントで初期化
 
@@ -371,6 +383,7 @@ document.getElementById('start-btn').addEventListener('click', async () => {
 ### 問題: テストが失敗する（Playwright）
 
 **解決策**:
+
 ```bash
 # ブラウザドライバーを再インストール
 npx playwright install
@@ -383,6 +396,7 @@ npx playwright install
 **原因**: プライベートブラウジングモード
 
 **解決策**:
+
 - 通常モードで開く
 - またはテスト時は `sessionStorage` にフォールバック
 
@@ -398,12 +412,14 @@ npm run lighthouse
 ```
 
 **目標スコア**:
+
 - Performance: 95+
 - Accessibility: 95+
 - Best Practices: 95+
 - SEO: 90+
 
 **主要メトリクス**:
+
 - First Contentful Paint (FCP): < 0.5秒
 - Time to Interactive (TTI): < 1秒
 - Total Blocking Time (TBT): < 100ms
@@ -418,6 +434,7 @@ npm run test:a11y
 ```
 
 **手動チェック項目**:
+
 1. キーボードナビゲーション（Tab/Shift+Tab）
 2. スクリーンリーダー（VoiceOver/NVDA）
 3. 色のコントラスト比（4.5:1以上）
@@ -427,15 +444,15 @@ npm run test:a11y
 
 ## Useful Commands Cheat Sheet
 
-| コマンド | 説明 |
-|---------|------|
-| `npm run dev` | 開発サーバー起動 |
-| `npm test` | ユニットテスト実行 |
-| `npm run test:e2e` | E2Eテスト実行 |
-| `npm run lint` | ESLintチェック |
-| `npm run format` | コードフォーマット |
-| `npm run build` | プロダクションビルド |
-| `npm run preview` | ビルド結果プレビュー |
+| コマンド            | 説明                 |
+| ------------------- | -------------------- |
+| `npm run dev`       | 開発サーバー起動     |
+| `npm test`          | ユニットテスト実行   |
+| `npm run test:e2e`  | E2Eテスト実行        |
+| `npm run lint`      | ESLintチェック       |
+| `npm run format`    | コードフォーマット   |
+| `npm run build`     | プロダクションビルド |
+| `npm run preview`   | ビルド結果プレビュー |
 | `npm run check-all` | すべてのチェック実行 |
 
 ---
@@ -443,6 +460,7 @@ npm run test:a11y
 ## Next Steps
 
 1. **Phase 2: タスク生成**
+
    ```bash
    # /speckit.tasks コマンドで実装タスクを生成
    ```
@@ -471,6 +489,7 @@ npm run test:a11y
 ## Support
 
 問題が発生した場合:
+
 1. このドキュメントのTroubleshootingセクションを確認
 2. GitHubのIssuesで検索
 3. 新しいIssueを作成（テンプレート使用）

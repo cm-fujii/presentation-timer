@@ -18,13 +18,13 @@
 
 #### Properties
 
-| フィールド | 型 | 説明 | デフォルト値 | 制約 |
-|----------|-----|------|-------------|------|
-| `status` | `'idle' \| 'running' \| 'paused'` | タイマーの動作状態 | `'idle'` | 必須 |
-| `initialSeconds` | `number` | 設定された初期秒数 | `600` (10分) | >= 0 |
-| `remainingSeconds` | `number` | 残り秒数（負の値も許容） | `600` | 整数 |
-| `startedAt` | `number \| null` | 開始時刻（Unix timestamp ms） | `null` | >= 0 または null |
-| `pausedAt` | `number \| null` | 一時停止時刻（Unix timestamp ms） | `null` | >= 0 または null |
+| フィールド         | 型                                | 説明                              | デフォルト値 | 制約             |
+| ------------------ | --------------------------------- | --------------------------------- | ------------ | ---------------- |
+| `status`           | `'idle' \| 'running' \| 'paused'` | タイマーの動作状態                | `'idle'`     | 必須             |
+| `initialSeconds`   | `number`                          | 設定された初期秒数                | `600` (10分) | >= 0             |
+| `remainingSeconds` | `number`                          | 残り秒数（負の値も許容）          | `600`        | 整数             |
+| `startedAt`        | `number \| null`                  | 開始時刻（Unix timestamp ms）     | `null`       | >= 0 または null |
+| `pausedAt`         | `number \| null`                  | 一時停止時刻（Unix timestamp ms） | `null`       | >= 0 または null |
 
 #### State Transitions
 
@@ -102,10 +102,10 @@ running/paused → idle: リセット
 
 #### Properties
 
-| フィールド | 型 | 説明 | デフォルト値 | 制約 |
-|----------|-----|------|-------------|------|
-| `minutes` | `number` | 初期時間（分） | `10` | 0 <= n <= 999 |
-| `seconds` | `number` | 初期時間（秒） | `0` | 0 <= n <= 59 |
+| フィールド | 型       | 説明           | デフォルト値 | 制約          |
+| ---------- | -------- | -------------- | ------------ | ------------- |
+| `minutes`  | `number` | 初期時間（分） | `10`         | 0 <= n <= 999 |
+| `seconds`  | `number` | 初期時間（秒） | `0`          | 0 <= n <= 59  |
 
 #### Derived Values
 
@@ -153,11 +153,11 @@ running/paused → idle: リセット
 
 #### Properties
 
-| フィールド | 型 | 説明 | デフォルト値 | 制約 |
-|----------|-----|------|-------------|------|
-| `points` | `number[]` | アラートを鳴らす秒数のリスト | `[60, 0]` | 重複なし、降順ソート |
-| `enabled` | `boolean` | アラート機能の有効/無効 | `true` | 必須 |
-| `volume` | `number` | 音量（0.0～1.0） | `0.8` | 0.0 <= n <= 1.0 |
+| フィールド | 型         | 説明                         | デフォルト値 | 制約                 |
+| ---------- | ---------- | ---------------------------- | ------------ | -------------------- |
+| `points`   | `number[]` | アラートを鳴らす秒数のリスト | `[60, 0]`    | 重複なし、降順ソート |
+| `enabled`  | `boolean`  | アラート機能の有効/無効      | `true`       | 必須                 |
+| `volume`   | `number`   | 音量（0.0～1.0）             | `0.8`        | 0.0 <= n <= 1.0      |
 
 #### Validation Rules
 
@@ -199,9 +199,9 @@ running/paused → idle: リセット
 
 #### Properties
 
-| フィールド | 型 | 説明 | デフォルト値 |
-|----------|-----|------|-------------|
-| `firedPoints` | `Set<number>` | 既に鳴らしたアラートポイント | `new Set()` |
+| フィールド    | 型            | 説明                         | デフォルト値 |
+| ------------- | ------------- | ---------------------------- | ------------ |
+| `firedPoints` | `Set<number>` | 既に鳴らしたアラートポイント | `new Set()`  |
 
 #### Behavior
 
@@ -215,17 +215,17 @@ running/paused → idle: リセット
 ```javascript
 // 初期状態
 {
-  firedPoints: new Set()
+  firedPoints: new Set();
 }
 
 // 60秒と0秒のアラートを発火済み
 {
-  firedPoints: new Set([60, 0])
+  firedPoints: new Set([60, 0]);
 }
 
 // リセット後
 {
-  firedPoints: new Set()
+  firedPoints: new Set();
 }
 ```
 
@@ -235,10 +235,10 @@ running/paused → idle: リセット
 
 ### Storage Keys
 
-| キー | 値の型 | 説明 |
-|------|-------|------|
+| キー                        | 値の型               | 説明             |
+| --------------------------- | -------------------- | ---------------- |
 | `presentation-timer.config` | `TimerConfig` (JSON) | タイマー初期設定 |
-| `presentation-timer.alerts` | `AlertConfig` (JSON) | アラート設定 |
+| `presentation-timer.alerts` | `AlertConfig` (JSON) | アラート設定     |
 
 ### Data Examples
 
@@ -305,12 +305,12 @@ function formatTime(totalSeconds) {
 }
 
 // Examples:
-formatTime(600)   // "10:00"
-formatTime(90)    // "1:30"
-formatTime(5)     // "0:05"
-formatTime(0)     // "0:00"
-formatTime(-30)   // "-0:30"
-formatTime(-135)  // "-2:15"
+formatTime(600); // "10:00"
+formatTime(90); // "1:30"
+formatTime(5); // "0:05"
+formatTime(0); // "0:00"
+formatTime(-30); // "-0:30"
+formatTime(-135); // "-2:15"
 ```
 
 ---

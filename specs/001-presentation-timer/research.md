@@ -15,6 +15,7 @@
 **選択**: HTML5 + CSS3 + Vanilla JavaScript (ES2022)
 
 **理由**:
+
 1. **軽量性**: React/Vue/Angularなどのフレームワークは不要。単一画面のシンプルなUIにはオーバースペック
 2. **パフォーマンス**: バンドルサイズを最小化（目標50KB以下）、TTI 1秒以内を容易に達成
 3. **GitHub Pages互換性**: ビルドプロセス不要、静的ファイルを直接デプロイ可能
@@ -23,14 +24,15 @@
 
 **検討した代替案**:
 
-| フレームワーク | 利点 | 却下理由 |
-|--------------|------|---------|
-| React | コンポーネント再利用、豊富なエコシステム | 40KB以上のバンドルサイズ、単一画面アプリには過剰 |
-| Vue 3 | 軽量（約20KB）、学習容易 | 依然としてオーバーヘッドあり、素のJSで十分 |
-| Svelte | コンパイル時最適化、非常に軽量 | ビルドプロセス必要、GitHub Pages直接デプロイが複雑化 |
-| Alpine.js | 超軽量（15KB）、HTML中心 | 依存関係を追加する必要性がない |
+| フレームワーク | 利点                                     | 却下理由                                             |
+| -------------- | ---------------------------------------- | ---------------------------------------------------- |
+| React          | コンポーネント再利用、豊富なエコシステム | 40KB以上のバンドルサイズ、単一画面アプリには過剰     |
+| Vue 3          | 軽量（約20KB）、学習容易                 | 依然としてオーバーヘッドあり、素のJSで十分           |
+| Svelte         | コンパイル時最適化、非常に軽量           | ビルドプロセス必要、GitHub Pages直接デプロイが複雑化 |
+| Alpine.js      | 超軽量（15KB）、HTML中心                 | 依存関係を追加する必要性がない                       |
 
 **参考資料**:
+
 - [You Might Not Need a Framework](https://youmightnotneedaframework.com/)
 - [The Cost of JavaScript Frameworks](https://timkadlec.com/remembers/2020-04-21-the-cost-of-javascript-frameworks/)
 
@@ -41,6 +43,7 @@
 **選択**: ブラウザネイティブのES Modules（`type="module"`）
 
 **理由**:
+
 1. **標準化**: すべてのモダンブラウザでサポート（iPad Safari iOS 15+含む）
 2. **ビルド不要**: Webpack/Rollup/Viteなどのバンドラー不要
 3. **モジュール分割**: 責任分離を維持しながら、自然なコード構造を実現
@@ -48,6 +51,7 @@
 5. **開発体験**: import/exportの直感的な構文
 
 **実装例**:
+
 ```javascript
 // app.js
 import { TimerService } from './services/TimerService.js';
@@ -59,13 +63,14 @@ const display = new TimerDisplay(timerService);
 
 **検討した代替案**:
 
-| アプローチ | 利点 | 却下理由 |
-|----------|------|---------|
-| 単一ファイル | 最もシンプル | 500行以上のコードでメンテナンス困難 |
-| IIFE（即時関数） | ES5互換 | モダンブラウザのみ対象、古い手法 |
-| Webpack/Vite | 最適化、ホットリロード | ビルドプロセス追加、複雑性増加 |
+| アプローチ       | 利点                   | 却下理由                            |
+| ---------------- | ---------------------- | ----------------------------------- |
+| 単一ファイル     | 最もシンプル           | 500行以上のコードでメンテナンス困難 |
+| IIFE（即時関数） | ES5互換                | モダンブラウザのみ対象、古い手法    |
+| Webpack/Vite     | 最適化、ホットリロード | ビルドプロセス追加、複雑性増加      |
 
 **参考資料**:
+
 - [MDN: JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - [Can I Use: ES6 Modules](https://caniuse.com/es6-module)
 
@@ -76,6 +81,7 @@ const display = new TimerDisplay(timerService);
 **選択**: Web Storage API (localStorage)
 
 **理由**:
+
 1. **シンプルさ**: 同期APIで扱いやすい
 2. **永続性**: ブラウザを閉じても設定が保持される
 3. **十分な容量**: タイマー設定（数KB）には5-10MBで十分
@@ -83,17 +89,19 @@ const display = new TimerDisplay(timerService);
 5. **サーバー不要**: 完全クライアントサイドで完結
 
 **保存データ**:
+
 - タイマー初期設定時間（分・秒）
 - アラートポイントのリスト（例: [60, 0] = 1分前と0秒）
 - ユーザー設定（音量、テーマなど、将来拡張）
 
 **実装例**:
+
 ```javascript
 // StorageService.js
 export class StorageService {
   static KEYS = {
     TIMER_DURATION: 'presentation-timer.duration',
-    ALERT_POINTS: 'presentation-timer.alerts'
+    ALERT_POINTS: 'presentation-timer.alerts',
   };
 
   saveTimerDuration(minutes, seconds) {
@@ -110,14 +118,15 @@ export class StorageService {
 
 **検討した代替案**:
 
-| ストレージ | 利点 | 却下理由 |
-|----------|------|---------|
-| IndexedDB | 大容量、非同期 | タイマー設定には過剰、複雑性増加 |
-| Cookie | サーバー送信可能 | 容量制限（4KB）、サーバー不要のため不適 |
-| sessionStorage | 同一タブ内持続 | ブラウザ再起動で消失、UXが悪化 |
-| なし（メモリのみ） | 最もシンプル | リロードで設定消失、ユーザビリティ低下 |
+| ストレージ         | 利点             | 却下理由                                |
+| ------------------ | ---------------- | --------------------------------------- |
+| IndexedDB          | 大容量、非同期   | タイマー設定には過剰、複雑性増加        |
+| Cookie             | サーバー送信可能 | 容量制限（4KB）、サーバー不要のため不適 |
+| sessionStorage     | 同一タブ内持続   | ブラウザ再起動で消失、UXが悪化          |
+| なし（メモリのみ） | 最もシンプル     | リロードで設定消失、ユーザビリティ低下  |
 
 **参考資料**:
+
 - [MDN: Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
 
 ---
@@ -129,6 +138,7 @@ export class StorageService {
 **理由**:
 
 #### Vitest
+
 1. **高速**: Viteベースで並列実行、HMR対応
 2. **Jest互換**: Jest APIと互換性あり、移行容易
 3. **ES Modules対応**: ネイティブサポート
@@ -136,6 +146,7 @@ export class StorageService {
 5. **軽量**: 最小限の設定で動作
 
 #### Playwright
+
 1. **クロスブラウザ**: Chromium, Firefox, WebKit（Safari）すべてテスト可能
 2. **iPad Safari対応**: WebKitエンジンでiPad Safariの挙動を再現
 3. **自動待機**: 要素が表示されるまで自動で待機
@@ -158,14 +169,15 @@ tests/
 
 **検討した代替案**:
 
-| ツール | 利点 | 却下理由 |
-|-------|------|---------|
-| Jest + Puppeteer | 人気、豊富な資料 | Vitestのほうが高速、Puppeteerはフレーク多い |
-| Mocha + Chai | 柔軟性高い | 設定が複雑、Vitestのほうがモダン |
-| Cypress | DX優秀、デバッグ容易 | WebKit未対応（iPad Safariテスト不可） |
-| Testing Library単体 | React等で標準 | E2Eテスト不可、Playwrightと組み合わせ可能 |
+| ツール              | 利点                 | 却下理由                                    |
+| ------------------- | -------------------- | ------------------------------------------- |
+| Jest + Puppeteer    | 人気、豊富な資料     | Vitestのほうが高速、Puppeteerはフレーク多い |
+| Mocha + Chai        | 柔軟性高い           | 設定が複雑、Vitestのほうがモダン            |
+| Cypress             | DX優秀、デバッグ容易 | WebKit未対応（iPad Safariテスト不可）       |
+| Testing Library単体 | React等で標準        | E2Eテスト不可、Playwrightと組み合わせ可能   |
 
 **参考資料**:
+
 - [Vitest Documentation](https://vitest.dev/)
 - [Playwright for Web Testing](https://playwright.dev/)
 
@@ -176,22 +188,26 @@ tests/
 **選択**: Web Audio API + HTMLAudioElement
 
 **理由**:
+
 1. **低レイテンシ**: Web Audio APIはリアルタイム再生に最適
 2. **制御性**: 音量、再生タイミングを細かく制御可能
 3. **互換性**: iPad Safariを含むすべてのモダンブラウザでサポート
 4. **ユーザーインタラクション要件対応**: Safariの自動再生ポリシーに準拠
 
 **実装アプローチ**:
+
 - デフォルト音源: 同梱のMP3ファイル（軽量、数KB）
 - フォールバック: HTMLAudioElement（古いブラウザ対応）
 - ユーザー設定: カスタム音源アップロード対応（将来拡張）
 
 **Safari制約への対応**:
+
 - 初回ユーザーインタラクション時にAudioContextを初期化
 - `resume()`メソッドでコンテキストをアクティブ化
 - タイマー開始ボタン押下時に準備完了
 
 **実装例**:
+
 ```javascript
 // AudioService.js
 export class AudioService {
@@ -220,14 +236,15 @@ export class AudioService {
 
 **検討した代替案**:
 
-| アプローチ | 利点 | 却下理由 |
-|----------|------|---------|
-| HTMLAudioElement単体 | シンプル | レイテンシやや高い、Safari制約あり |
-| Howler.js | 高機能ライブラリ | 依存関係追加、シンプルな用途には過剰 |
-| Tone.js | 音楽制作向け高機能 | 80KB以上、完全にオーバースペック |
-| システムビープ | 依存なし | ブラウザAPIで不可、UX劣る |
+| アプローチ           | 利点               | 却下理由                             |
+| -------------------- | ------------------ | ------------------------------------ |
+| HTMLAudioElement単体 | シンプル           | レイテンシやや高い、Safari制約あり   |
+| Howler.js            | 高機能ライブラリ   | 依存関係追加、シンプルな用途には過剰 |
+| Tone.js              | 音楽制作向け高機能 | 80KB以上、完全にオーバースペック     |
+| システムビープ       | 依存なし           | ブラウザAPIで不可、UX劣る            |
 
 **参考資料**:
+
 - [MDN: Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 - [Safari Audio Autoplay Policy](https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/)
 
@@ -238,52 +255,46 @@ export class AudioService {
 **選択**: Service Worker + Cache API
 
 **理由**:
+
 1. **オフライン動作**: ネットワーク不要で完全動作
 2. **PWA対応**: ホーム画面追加でネイティブアプリ風体験
 3. **パフォーマンス**: 初回以降はキャッシュから即座にロード
 4. **標準技術**: 追加ライブラリ不要
 
 **キャッシュ戦略**: Cache-First
+
 - HTML/CSS/JS: すべてキャッシュ
 - 音声ファイル: キャッシュ
 - 更新: バージョン番号でキャッシュ無効化
 
 **実装例**:
+
 ```javascript
 // sw.js
 const CACHE_NAME = 'presentation-timer-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/css/main.css',
-  '/js/app.js',
-  '/assets/sounds/alert.mp3'
-];
+const urlsToCache = ['/', '/index.html', '/css/main.css', '/js/app.js', '/assets/sounds/alert.mp3'];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.match(event.request).then((response) => response || fetch(event.request))
   );
 });
 ```
 
 **検討した代替案**:
 
-| アプローチ | 利点 | 却下理由 |
-|----------|------|---------|
-| AppCache（廃止） | 古いブラウザ対応 | 廃止済み、使用不可 |
-| Workbox | Googleの高機能SW | 依存追加、シンプルなキャッシュには過剰 |
-| なし | 最もシンプル | オフライン対応できない、UX低下 |
+| アプローチ       | 利点             | 却下理由                               |
+| ---------------- | ---------------- | -------------------------------------- |
+| AppCache（廃止） | 古いブラウザ対応 | 廃止済み、使用不可                     |
+| Workbox          | Googleの高機能SW | 依存追加、シンプルなキャッシュには過剰 |
+| なし             | 最もシンプル     | オフライン対応できない、UX低下         |
 
 **参考資料**:
+
 - [MDN: Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
 - [PWA Best Practices](https://web.dev/pwa/)
 
@@ -294,14 +305,17 @@ self.addEventListener('fetch', event => {
 ### Linting & Formatting
 
 **ESLint**: JavaScript静的解析
+
 - 設定: `eslint:recommended` + カスタムルール
 - 目的: バグ防止、コード品質向上
 
 **Prettier**: コードフォーマッター
+
 - 設定: デフォルト（セミコロンあり、シングルクォート）
 - 目的: 一貫したコードスタイル
 
 **JSDoc + TypeScript checkJs**:
+
 - すべての関数に型注釈
 - `@param`, `@returns`, `@type`でドキュメント兼型チェック
 
@@ -325,6 +339,7 @@ function startCountdown(totalSeconds, onTick, onComplete) {
 ### GitHub Actions
 
 **テストワークフロー** (`.github/workflows/test.yml`):
+
 - トリガー: PR作成、mainへのpush
 - ステップ:
   1. Node.js 20セットアップ
@@ -335,6 +350,7 @@ function startCountdown(totalSeconds, onTick, onComplete) {
   6. カバレッジレポート生成（Codecov連携）
 
 **デプロイワークフロー** (`.github/workflows/deploy.yml`):
+
 - トリガー: mainブランチへのマージ
 - ステップ:
   1. テストワークフロー成功確認
@@ -348,6 +364,7 @@ function startCountdown(totalSeconds, onTick, onComplete) {
 ### Model-View-Service (MVS)
 
 **採用理由**:
+
 1. **責任分離**: データ（Model）、UI（View）、ロジック（Service）を分離
 2. **テスト容易性**: 各層を独立してテスト可能
 3. **軽量MVC**: フレームワーク不要の軽量実装
@@ -363,6 +380,7 @@ UI Components (表示・イベント処理)
 ```
 
 **具体例**:
+
 - `TimerState.js` (Model): タイマーの状態データ
 - `TimerService.js` (Service): カウントダウンロジック、状態更新
 - `TimerDisplay.js` (UI): DOM操作、ユーザーイベント処理
@@ -373,16 +391,17 @@ UI Components (表示・イベント処理)
 
 ### Target Browsers
 
-| ブラウザ | 最小バージョン | 理由 |
-|---------|--------------|------|
-| Safari (iOS) | 15.0+ | iPad対応、ES2022サポート |
-| Chrome | 90+ | ES Modules、Web Audio API |
-| Firefox | 88+ | 同上 |
-| Edge | 90+ | Chromiumベース |
+| ブラウザ     | 最小バージョン | 理由                      |
+| ------------ | -------------- | ------------------------- |
+| Safari (iOS) | 15.0+          | iPad対応、ES2022サポート  |
+| Chrome       | 90+            | ES Modules、Web Audio API |
+| Firefox      | 88+            | 同上                      |
+| Edge         | 90+            | Chromiumベース            |
 
 ### Polyfill不要
 
 すべての使用APIがターゲットブラウザでネイティブサポートされているため、polyfill不要:
+
 - ES Modules
 - Web Storage API
 - Web Audio API
@@ -393,13 +412,13 @@ UI Components (表示・イベント処理)
 
 ## Performance Budget
 
-| メトリクス | 目標値 | 測定方法 |
-|----------|-------|---------|
-| バンドルサイズ（gzip後） | < 50KB | Lighthouse, webpack-bundle-analyzer |
-| Time to Interactive (TTI) | < 1秒 | Lighthouse |
-| First Contentful Paint (FCP) | < 0.5秒 | Lighthouse |
-| タイマー精度 | ±1秒/10分 | E2Eテストで検証 |
-| メモリ使用量 | < 10MB | Chrome DevTools Performance Monitor |
+| メトリクス                   | 目標値    | 測定方法                            |
+| ---------------------------- | --------- | ----------------------------------- |
+| バンドルサイズ（gzip後）     | < 50KB    | Lighthouse, webpack-bundle-analyzer |
+| Time to Interactive (TTI)    | < 1秒     | Lighthouse                          |
+| First Contentful Paint (FCP) | < 0.5秒   | Lighthouse                          |
+| タイマー精度                 | ±1秒/10分 | E2Eテストで検証                     |
+| メモリ使用量                 | < 10MB    | Chrome DevTools Performance Monitor |
 
 ---
 
@@ -408,11 +427,13 @@ UI Components (表示・イベント処理)
 ### Content Security Policy (CSP)
 
 ```html
-<meta http-equiv="Content-Security-Policy"
-      content="default-src 'self';
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self';
                script-src 'self';
                style-src 'self' 'unsafe-inline';
-               media-src 'self'">
+               media-src 'self'"
+/>
 ```
 
 - **script-src 'self'**: 同一オリジンのスクリプトのみ許可

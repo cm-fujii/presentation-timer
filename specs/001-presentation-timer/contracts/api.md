@@ -42,7 +42,7 @@
  * @param {TimerConfig} config - 初期タイマー設定
  * @param {AlertConfig} alertConfig - アラート設定
  */
-constructor(config, alertConfig)
+constructor(config, alertConfig);
 ```
 
 ### Methods
@@ -61,14 +61,17 @@ start(): void
 ```
 
 **事前条件**:
+
 - `state.status === 'idle'`
 
 **事後条件**:
+
 - `state.status === 'running'`
 - `state.startedAt !== null`
 - 100msごとに`tick`イベント発火
 
 **イベント**:
+
 - `tick`: 100ms毎に発火、`remainingSeconds`を通知
 - `alert`: アラートポイント到達時に発火
 - `complete`: 0秒到達時に発火（1回のみ）
@@ -86,9 +89,11 @@ pause(): void
 ```
 
 **事前条件**:
+
 - `state.status === 'running'`
 
 **事後条件**:
+
 - `state.status === 'paused'`
 - `state.pausedAt !== null`
 - `tick`イベント停止
@@ -106,9 +111,11 @@ resume(): void
 ```
 
 **事前条件**:
+
 - `state.status === 'paused'`
 
 **事後条件**:
+
 - `state.status === 'running'`
 - `state.pausedAt === null`
 - `tick`イベント再開
@@ -127,6 +134,7 @@ reset(): void
 **事前条件**: なし
 
 **事後条件**:
+
 - `state.status === 'idle'`
 - `state.remainingSeconds === state.initialSeconds`
 - `state.startedAt === null`
@@ -148,11 +156,13 @@ setDuration(minutes, seconds): void
 ```
 
 **事前条件**:
+
 - `state.status === 'idle'`
 - `0 <= minutes <= 999`
 - `0 <= seconds <= 59`
 
 **事後条件**:
+
 - `state.initialSeconds = minutes * 60 + seconds`
 - `state.remainingSeconds = state.initialSeconds`
 
@@ -169,6 +179,7 @@ getRemainingTime(): { minutes: number, seconds: number, isNegative: boolean }
 ```
 
 **戻り値**:
+
 ```javascript
 {
   minutes: 5,        // 絶対値の分
@@ -223,6 +234,7 @@ getState(): Readonly<TimerState>
 ```
 
 **発火条件**:
+
 - `remainingSeconds`がアラートポイントを通過
 - 該当ポイントが未発火（`!firedPoints.has(point)`）
 - タイマーがrunning状態
@@ -263,11 +275,11 @@ timer.addEventListener('complete', () => {
 });
 
 // タイマー操作
-timer.start();          // 開始
+timer.start(); // 開始
 setTimeout(() => {
-  timer.pause();        // 5秒後に一時停止
+  timer.pause(); // 5秒後に一時停止
   setTimeout(() => {
-    timer.resume();     // さらに3秒後に再開
+    timer.resume(); // さらに3秒後に再開
   }, 3000);
 }, 5000);
 ```
@@ -308,6 +320,7 @@ static loadTimerConfig(): TimerConfig
 **戻り値**: 常に有効な`TimerConfig`（エラー時はデフォルト）
 
 **エラーハンドリング**:
+
 - localStorage無効: デフォルト値返却
 - 破損データ: デフォルト値返却、エラーログ出力
 - 範囲外の値: クランプして返却
@@ -354,9 +367,9 @@ static clear(): void
 
 ### Storage Keys
 
-| キー | 値 |
-|------|-----|
-| `presentation-timer.config` | `{ minutes: number, seconds: number }` |
+| キー                        | 値                                                       |
+| --------------------------- | -------------------------------------------------------- |
+| `presentation-timer.config` | `{ minutes: number, seconds: number }`                   |
 | `presentation-timer.alerts` | `{ points: number[], enabled: boolean, volume: number }` |
 
 ---
@@ -369,7 +382,7 @@ StorageService.saveTimerConfig({ minutes: 15, seconds: 0 });
 StorageService.saveAlertConfig({
   points: [180, 60, 0],
   enabled: true,
-  volume: 0.8
+  volume: 0.8,
 });
 
 // 読み込み
@@ -414,6 +427,7 @@ async initialize(): Promise<void>
 **事前条件**: ユーザーインタラクション（クリック等）後に呼び出し
 
 **事後条件**:
+
 - `AudioContext`が作成され、アクティブ状態
 - 音声ファイルがデコードされ、バッファに保存
 
@@ -516,6 +530,7 @@ update(formattedTime: string, isNegative: boolean): void
 ```
 
 **副作用**:
+
 - テキスト内容更新
 - `isNegative === true`の場合、赤色クラス追加
 
@@ -568,6 +583,7 @@ render(): void
 ```
 
 **生成ボタン**:
+
 - Start/Pause（状態に応じて切り替え）
 - Reset
 
@@ -585,11 +601,11 @@ updateButtonStates(status: 'idle' | 'running' | 'paused'): void
 
 **状態別ボタン**:
 
-| 状態 | Start/Pauseボタン | Resetボタン |
-|------|------------------|------------|
-| idle | "Start" (有効) | 無効 |
-| running | "Pause" (有効) | 有効 |
-| paused | "Resume" (有効) | 有効 |
+| 状態    | Start/Pauseボタン | Resetボタン |
+| ------- | ----------------- | ----------- |
+| idle    | "Start" (有効)    | 無効        |
+| running | "Pause" (有効)    | 有効        |
+| paused  | "Resume" (有効)   | 有効        |
 
 ---
 
@@ -627,6 +643,7 @@ render(): void
 ```
 
 **生成UI**:
+
 - 時間設定（分・秒入力フィールド）
 - アラートポイント設定（リスト + 追加/削除ボタン）
 - アラート有効/無効トグル
