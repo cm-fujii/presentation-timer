@@ -8,11 +8,13 @@
 **Organization**: タスクはユーザーストーリーごとにグループ化され、各ストーリーを独立して実装・テストできるようにします。
 
 ## Format: `[ID] [P?] [Story] Description`
+
 - **[P]**: 並列実行可能（異なるファイル、依存関係なし）
 - **[Story]**: このタスクが属するユーザーストーリー（US1, US2, US3）
 - 説明には正確なファイルパスを含む
 
 ## Path Conventions
+
 - GitHub Pages用静的サイト構造（ルートディレクトリベース）
 - メインコード: `js/` 以下
 - テスト: `tests/` 以下
@@ -25,18 +27,18 @@
 
 **Purpose**: プロジェクト構造の作成と開発環境のセットアップ
 
-- [ ] T001 プロジェクトディレクトリ構造を作成（plan.md に従う）
-- [ ] T002 [P] package.json を作成し、開発依存関係を追加（Vitest, Playwright, ESLint, Prettier）
-- [ ] T003 [P] .gitignore を作成（node_modules, dist/, coverage/, .DS_Store）
-- [ ] T004 [P] ESLint設定ファイル（.eslintrc.json）を作成（eslint:recommended + ES2022）
-- [ ] T005 [P] Prettier設定ファイル（.prettierrc.json）を作成
-- [ ] T006 [P] JSDoc + TypeScript checkJs 設定（jsconfig.json）を作成
-- [ ] T007 [P] Vitest設定ファイル（vitest.config.js）を作成
-- [ ] T008 [P] Playwright設定ファイル（playwright.config.js）を作成（Chromium, Firefox, WebKit）
-- [ ] T009 [P] GitHub Actions CI/CDワークフローファイル（.github/workflows/test.yml）を作成
-- [ ] T010 [P] GitHub Actions デプロイワークフローファイル（.github/workflows/deploy.yml）を作成
-- [ ] T011 README.md を作成（プロジェクト概要、セットアップ手順、デプロイ方法）
-- [ ] T012 [P] デフォルトアラート音ファイル（assets/sounds/alert.mp3）を配置
+- [x] T001 プロジェクトディレクトリ構造を作成（plan.md に従う）
+- [x] T002 [P] package.json を作成し、開発依存関係を追加（Vitest, Playwright, ESLint, Prettier）
+- [x] T003 [P] .gitignore を作成（node_modules, dist/, coverage/, .DS_Store）
+- [x] T004 [P] ESLint設定ファイル（.eslintrc.json）を作成（eslint:recommended + ES2022）
+- [x] T005 [P] Prettier設定ファイル（.prettierrc.json）を作成
+- [x] T006 [P] JSDoc + TypeScript checkJs 設定（jsconfig.json）を作成
+- [x] T007 [P] Vitest設定ファイル（vitest.config.js）を作成
+- [x] T008 [P] Playwright設定ファイル（playwright.config.js）を作成（Chromium, Firefox, WebKit）
+- [x] T009 [P] GitHub Actions CI/CDワークフローファイル（.github/workflows/test.yml）を作成
+- [x] T010 [P] GitHub Actions デプロイワークフローファイル（.github/workflows/deploy.yml）を作成
+- [x] T011 README.md を作成（プロジェクト概要、セットアップ手順、デプロイ方法）
+- [x] T012 [P] デフォルトアラート音ファイル（assets/sounds/alert.mp3）を配置
 
 **Checkpoint**: プロジェクト構造とツール設定が完了
 
@@ -48,14 +50,14 @@
 
 **⚠️ CRITICAL**: このフェーズが完了するまで、ユーザーストーリーの実装は開始できません
 
-- [ ] T013 [P] TimerState モデルの型定義を js/models/TimerState.js に作成（JSDoc完備）
-- [ ] T014 [P] TimerConfig モデルの型定義を js/models/TimerConfig.js に作成（JSDoc完備）
-- [ ] T015 [P] AlertConfig モデルの型定義を js/models/AlertConfig.js に作成（JSDoc完備）
-- [ ] T016 StorageService の静的メソッドを js/services/StorageService.js に実装（loadTimerConfig, saveTimerConfig, loadAlertConfig, saveAlertConfig, clear）
-- [ ] T017 [P] StorageService のユニットテストを tests/unit/StorageService.test.js に作成（TDD: 赤→緑→リファクタリング）
-- [ ] T018 基本的な index.html を作成（viewport設定、ES Modules対応、main.css/responsive.css読み込み）
-- [ ] T019 [P] ベーススタイルシート css/main.css を作成（変数定義、リセットCSS、基本レイアウト）
-- [ ] T020 [P] レスポンシブスタイルシート css/responsive.css を作成（iPad縦横、モバイル、デスクトップ対応）
+- [x] T013 [P] TimerState モデルの型定義を js/models/TimerState.js に作成（JSDoc完備）
+- [x] T014 [P] TimerConfig モデルの型定義を js/models/TimerConfig.js に作成（JSDoc完備）
+- [x] T015 [P] AlertConfig モデルの型定義を js/models/AlertConfig.js に作成（JSDoc完備）
+- [x] T016 StorageService の静的メソッドを js/services/StorageService.js に実装（loadTimerConfig, saveTimerConfig, loadAlertConfig, saveAlertConfig, clear）
+- [x] T017 [P] StorageService のユニットテストを tests/unit/StorageService.test.js に作成（TDD: 赤→緑→リファクタリング）
+- [x] T018 基本的な index.html を作成（viewport設定、ES Modules対応、main.css/responsive.css読み込み）
+- [x] T019 [P] ベーススタイルシート css/main.css を作成（変数定義、リセットCSS、基本レイアウト）
+- [x] T020 [P] レスポンシブスタイルシート css/responsive.css を作成（iPad縦横、モバイル、デスクトップ対応）
 
 **Checkpoint**: 基盤実装完了 - ユーザーストーリーの実装開始可能
 
@@ -71,31 +73,31 @@
 
 **NOTE: これらのテストを先に書き、失敗することを確認してから実装を開始する**
 
-- [ ] T021 [P] [US1] TimerService の契約テストを tests/unit/TimerService.test.js に作成（start, pause, resume, reset, setDuration, getState メソッド）
-- [ ] T022 [P] [US1] TimerService のイベントテスト（tick, complete イベント発火）を tests/unit/TimerService.test.js に追加
-- [ ] T023 [P] [US1] TimerDisplay の統合テストを tests/integration/TimerFlow.test.js に作成（UI更新ロジック）
-- [ ] T024 [P] [US1] E2Eテスト（基本操作フロー）を tests/e2e/userJourney.spec.js に作成（設定→開始→停止→再開→リセット）
+- [x] T021 [P] [US1] TimerService の契約テストを tests/unit/TimerService.test.js に作成（start, pause, resume, reset, setDuration, getState メソッド）
+- [x] T022 [P] [US1] TimerService のイベントテスト（tick, complete イベント発火）を tests/unit/TimerService.test.js に追加
+- [x] T023 [P] [US1] TimerDisplay の統合テストを tests/integration/TimerFlow.test.js に作成（UI更新ロジック）
+- [x] T024 [P] [US1] E2Eテスト（基本操作フロー）を tests/e2e/userJourney.spec.js に作成（設定→開始→停止→再開→リセット）
 
 ### Implementation for User Story 1
 
-- [ ] T025 [US1] TimerService クラスを js/services/TimerService.js に実装（constructor, start, pause, resume, reset, setDuration, getRemainingTime, getState メソッド）
-- [ ] T026 [US1] TimerService に tick イベントロジックを実装（100ms間隔更新、秒変更時のみイベント発火）
-- [ ] T027 [US1] TimerService に complete イベントロジックを実装（0秒到達時）
-- [ ] T028 [US1] TimerService の状態遷移ロジックを実装（idle ↔ running ↔ paused）
-- [ ] T029 [US1] formatTime ユーティリティ関数を js/services/TimerService.js に実装（MM:SS形式変換）
-- [ ] T030 [US1] TimerDisplay コンポーネントを js/ui/TimerDisplay.js に実装（render, update メソッド）
-- [ ] T031 [US1] TimerDisplay の DOM構造を実装（大きなフォント、中央配置、アクセシビリティ対応）
-- [ ] T032 [US1] ControlPanel コンポーネントを js/ui/ControlPanel.js に実装（render, updateButtonStates メソッド）
-- [ ] T033 [US1] ControlPanel のボタンイベントハンドラを実装（Start/Pause/Resume, Reset）
-- [ ] T034 [US1] SettingsPanel コンポーネントを js/ui/SettingsPanel.js に実装（render, saveSettings メソッド）
-- [ ] T035 [US1] SettingsPanel の時間入力UI を実装（分・秒フィールド、バリデーション）
-- [ ] T036 [US1] アプリケーションエントリポイント js/app.js を実装（モジュール初期化、イベント接続）
-- [ ] T037 [US1] index.html に TimerDisplay, ControlPanel, SettingsPanel のコンテナ要素を追加
-- [ ] T038 [US1] css/main.css にタイマー表示スタイルを追加（大きいフォントサイズ、視認性重視）
-- [ ] T039 [US1] css/main.css にボタンスタイルを追加（タッチフレンドリー、明確なフィードバック）
-- [ ] T040 [US1] css/responsive.css にiPad縦横対応を追加（メディアクエリ）
-- [ ] T041 [US1] アクセシビリティ対応を実装（ARIAラベル、role属性、キーボードナビゲーション）
-- [ ] T042 [US1] すべてのテストを実行し、User Story 1が独立して動作することを検証
+- [x] T025 [US1] TimerService クラスを js/services/TimerService.js に実装（constructor, start, pause, resume, reset, setDuration, getRemainingTime, getState メソッド）
+- [x] T026 [US1] TimerService に tick イベントロジックを実装（100ms間隔更新、秒変更時のみイベント発火）
+- [x] T027 [US1] TimerService に complete イベントロジックを実装（0秒到達時）
+- [x] T028 [US1] TimerService の状態遷移ロジックを実装（idle ↔ running ↔ paused）
+- [x] T029 [US1] formatTime ユーティリティ関数を js/services/TimerService.js に実装（MM:SS形式変換）
+- [x] T030 [US1] TimerDisplay コンポーネントを js/ui/TimerDisplay.js に実装（render, update メソッド）
+- [x] T031 [US1] TimerDisplay の DOM構造を実装（大きなフォント、中央配置、アクセシビリティ対応）
+- [x] T032 [US1] ControlPanel コンポーネントを js/ui/ControlPanel.js に実装（render, updateButtonStates メソッド）
+- [x] T033 [US1] ControlPanel のボタンイベントハンドラを実装（Start/Pause/Resume, Reset）
+- [x] T034 [US1] SettingsPanel コンポーネントを js/ui/SettingsPanel.js に実装（render, saveSettings メソッド）
+- [x] T035 [US1] SettingsPanel の時間入力UI を実装（分・秒フィールド、バリデーション）
+- [x] T036 [US1] アプリケーションエントリポイント js/app.js を実装（モジュール初期化、イベント接続）
+- [x] T037 [US1] index.html に TimerDisplay, ControlPanel, SettingsPanel のコンテナ要素を追加
+- [x] T038 [US1] css/main.css にタイマー表示スタイルを追加（大きいフォントサイズ、視認性重視）
+- [x] T039 [US1] css/main.css にボタンスタイルを追加（タッチフレンドリー、明確なフィードバック）
+- [x] T040 [US1] css/responsive.css にiPad縦横対応を追加（メディアクエリ）
+- [x] T041 [US1] アクセシビリティ対応を実装（ARIAラベル、role属性、キーボードナビゲーション）
+- [x] T042 [US1] すべてのテストを実行し、User Story 1が独立して動作することを検証
 
 **Checkpoint**: User Story 1（MVP）が完全に機能し、独立してテスト可能
 
@@ -109,20 +111,20 @@
 
 ### Tests for User Story 2（TDD: テストファースト）
 
-- [ ] T043 [P] [US2] マイナス時間表示のユニットテストを tests/unit/TimerService.test.js に追加（負の remainingSeconds）
-- [ ] T044 [P] [US2] マイナス時間の formatTime テストを tests/unit/TimerService.test.js に追加（-MM:SS形式）
-- [ ] T045 [P] [US2] 赤色表示の統合テストを tests/integration/TimerFlow.test.js に追加（CSSクラス変更）
-- [ ] T046 [P] [US2] E2Eテスト（マイナス時間フロー）を tests/e2e/userJourney.spec.js に追加（0秒超過シナリオ）
+- [x] T043 [P] [US2] マイナス時間表示のユニットテストを tests/unit/TimerService.test.js に追加（負の remainingSeconds）
+- [x] T044 [P] [US2] マイナス時間の formatTime テストを tests/unit/TimerService.test.js に追加（-MM:SS形式）
+- [x] T045 [P] [US2] 赤色表示の統合テストを tests/integration/TimerFlow.test.js に追加（CSSクラス変更）
+- [x] T046 [P] [US2] E2Eテスト（マイナス時間フロー）を tests/e2e/userJourney.spec.js に追加（0秒超過シナリオ）
 
 ### Implementation for User Story 2
 
-- [ ] T047 [US2] TimerService にマイナス時間継続ロジックを実装（0秒以降もカウント継続）
-- [ ] T048 [US2] formatTime 関数にマイナス時間対応を追加（負の値の処理）
-- [ ] T049 [US2] TimerDisplay.update() メソッドに赤色表示ロジックを追加（isNegative フラグ）
-- [ ] T050 [US2] css/main.css に赤色表示スタイルクラスを追加（.timer-negative、コントラスト比4.5:1以上）
-- [ ] T051 [US2] css/main.css にマイナス時間のアニメーション効果を追加（オプション：警告アニメーション）
-- [ ] T052 [US2] リセット時に赤色表示をクリアするロジックを ControlPanel に実装
-- [ ] T053 [US2] すべてのテストを実行し、User Story 2が独立して動作することを検証
+- [x] T047 [US2] TimerService にマイナス時間継続ロジックを実装（0秒以降もカウント継続）
+- [x] T048 [US2] formatTime 関数にマイナス時間対応を追加（負の値の処理）
+- [x] T049 [US2] TimerDisplay.update() メソッドに赤色表示ロジックを追加（isNegative フラグ）
+- [x] T050 [US2] css/main.css に赤色表示スタイルクラスを追加（.timer-display__time--negative、コントラスト比4.5:1以上）
+- [x] T051 [US2] css/main.css にマイナス時間のアニメーション効果を追加（pulse アニメーション）
+- [x] T052 [US2] リセット時に赤色表示をクリアするロジックを TimerDisplay に実装
+- [x] T053 [US2] すべてのテストを実行し、User Story 2が独立して動作することを検証
 
 **Checkpoint**: User Story 1 と User Story 2 が両方とも独立して動作
 
@@ -232,12 +234,14 @@
 ### Parallel Opportunities
 
 #### Setup (Phase 1)
+
 ```bash
 # [P]マークのあるタスクを並列実行可能
 T002, T003, T004, T005, T006, T007, T008, T009, T010, T012
 ```
 
 #### Foundational (Phase 2)
+
 ```bash
 # モデル定義（並列可能）
 T013, T014, T015
@@ -250,11 +254,13 @@ T016 → T017
 ```
 
 #### User Story 1 Tests（並列可能）
+
 ```bash
 T021, T022, T023, T024
 ```
 
 #### User Story 1 Implementation（一部並列可能）
+
 ```bash
 # コアロジック（順次）
 T025 → T026 → T027 → T028 → T029
@@ -267,16 +273,19 @@ T038, T039, T040
 ```
 
 #### User Story 2 Tests（並列可能）
+
 ```bash
 T043, T044, T045, T046
 ```
 
 #### User Story 3 Tests（並列可能）
+
 ```bash
 T054, T055, T056, T057
 ```
 
 #### User Story 3 Implementation（一部並列可能）
+
 ```bash
 # AudioService（並列可能）
 T058, T059, T060
@@ -289,12 +298,14 @@ T065, T066, T067
 ```
 
 #### PWA (Phase 6)
+
 ```bash
 # Service Worker関連（並列可能）
 T073, T074, T076, T078
 ```
 
 #### Polish (Phase 7)
+
 ```bash
 # ドキュメント・テスト（並列可能）
 T079, T080, T081, T082, T084, T085, T086, T088, T089, T090, T091
@@ -390,6 +401,7 @@ Task: "css/responsive.css にiPad縦横対応を追加"
 **MVP範囲**: Phase 1 + Phase 2 + Phase 3（User Story 1のみ） = 42タスク
 
 **推奨実装順序**:
+
 1. MVP（User Story 1）で基本機能を完成させる
 2. User Story 2でマイナス表示を追加（独立して価値を提供）
 3. User Story 3でアラート機能を追加（独立して価値を提供）
