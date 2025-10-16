@@ -293,6 +293,116 @@ test.describe('Accessibility Tests', () => {
   });
 });
 
+test.describe('User Story 3: Sound Preview Feature', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
+  });
+
+  test('should have preview buttons for each alert point', async ({ page }) => {
+    await page.goto('/');
+
+    // アラート設定セクションを確認
+    const alertSettings = page.locator('.alert-settings');
+    await expect(alertSettings).toBeVisible();
+
+    // プレビューボタンが存在することを確認
+    const previewButtons = page.locator('.alert-point-item__preview');
+    const count = await previewButtons.count();
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('should preview sound when clicking preview button', async ({ page }) => {
+    await page.goto('/');
+
+    // AudioContextの初期化を待つために、最初にクリック
+    const startButton = page.locator('[data-action="start"]');
+    await startButton.click();
+    await page.waitForTimeout(100);
+    const resetButton = page.locator('[data-action="reset"]');
+    await resetButton.click();
+
+    // プレビューボタンをクリック
+    const previewButton = page.locator('.alert-point-item__preview').first();
+    await previewButton.click();
+
+    // プレビューボタンがクリック可能であることを確認（エラーが出ないこと）
+    await expect(previewButton).toBeEnabled();
+  });
+
+  test('should have accessible preview buttons', async ({ page }) => {
+    await page.goto('/');
+
+    // プレビューボタンにARIA labelが設定されていることを確認
+    const previewButton = page.locator('.alert-point-item__preview').first();
+    await expect(previewButton).toHaveAttribute('aria-label', 'Preview sound');
+  });
+
+  test('should display sound selection dropdown for each alert point', async ({ page }) => {
+    await page.goto('/');
+
+    // 音選択ドロップダウンが存在することを確認
+    const soundSelects = page.locator('.alert-point-item__sound-select');
+    const count = await soundSelects.count();
+    expect(count).toBeGreaterThan(0);
+
+    // ドロップダウンにベルと銅鑼のオプションがあることを確認
+    const firstSelect = soundSelects.first();
+    const options = firstSelect.locator('option');
+    const optionTexts = await options.allTextContents();
+
+    expect(optionTexts).toContain('Bell (ベル)');
+    expect(optionTexts).toContain('Gong (銅鑼)');
+  });
+
+  test('should change sound type when selecting from dropdown', async ({ page }) => {
+    await page.goto('/');
+
+    // 音選択ドロップダウンを変更
+    const soundSelect = page.locator('.alert-point-item__sound-select').first();
+    await soundSelect.selectOption('bell');
+
+    // 設定を保存
+    const saveButton = page.locator('[data-action="save-settings"]');
+    await saveButton.click();
+
+    // ページをリロードして設定が保存されていることを確認
+    await page.reload();
+
+    const loadedSelect = page.locator('.alert-point-item__sound-select').first();
+    const selectedValue = await loadedSelect.inputValue();
+    expect(selectedValue).toBe('bell');
+  });
+
+  test('should preview different sounds for different alert points', async ({ page }) => {
+    await page.goto('/');
+
+    // AudioContextの初期化
+    const startButton = page.locator('[data-action="start"]');
+    await startButton.click();
+    await page.waitForTimeout(100);
+    const resetButton = page.locator('[data-action="reset"]');
+    await resetButton.click();
+
+    // 複数のプレビューボタンが独立して機能することを確認
+    const previewButtons = page.locator('.alert-point-item__preview');
+    const count = await previewButtons.count();
+
+    if (count >= 2) {
+      // 最初のプレビューボタンをクリック
+      await previewButtons.nth(0).click();
+      await page.waitForTimeout(200);
+
+      // 2番目のプレビューボタンをクリック
+      await previewButtons.nth(1).click();
+
+      // エラーが出ないことを確認
+      await expect(previewButtons.nth(1)).toBeEnabled();
+    }
+  });
+});
+
 test.describe('Responsive Design Tests', () => {
   test('should display correctly on iPad Portrait', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
