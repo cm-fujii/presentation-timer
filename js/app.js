@@ -6,6 +6,7 @@
 
 import { TimerService } from './services/TimerService.js';
 import { StorageService } from './services/StorageService.js';
+import { AudioService } from './services/AudioService.js';
 import { TimerDisplay } from './ui/TimerDisplay.js';
 import { ControlPanel } from './ui/ControlPanel.js';
 import { SettingsPanel } from './ui/SettingsPanel.js';
@@ -26,6 +27,13 @@ class App {
      * @type {TimerService}
      */
     this._timerService = null;
+
+    /**
+     * オーディオサービス
+     * @private
+     * @type {AudioService}
+     */
+    this._audioService = null;
 
     /**
      * タイマー表示コンポーネント
@@ -57,11 +65,16 @@ class App {
    */
   init() {
     // localStorageから設定を読み込む
-    const config = StorageService.loadTimerConfig();
-    const totalSeconds = getTotalSeconds(config);
+    const timerConfig = StorageService.loadTimerConfig();
+    const alertConfig = StorageService.loadAlertConfig();
+    const totalSeconds = getTotalSeconds(timerConfig);
 
     // TimerServiceを初期化
-    this._timerService = new TimerService(totalSeconds);
+    this._timerService = new TimerService(totalSeconds, alertConfig);
+
+    // AudioServiceを初期化（ユーザーインタラクション後に音声を読み込む）
+    this._audioService = new AudioService();
+    this._audioService.setVolume(alertConfig.volume);
 
     // UIコンポーネントを初期化
     this._initializeUI();
@@ -71,6 +84,9 @@ class App {
 
     // 初期表示を更新
     this._updateUI();
+
+    // ユーザーインタラクション後にAudioServiceを初期化
+    this._initializeAudioOnUserInteraction();
   }
 
   /**
@@ -124,6 +140,29 @@ class App {
       // completeイベント後もカウントを継続するため、UIは更新し続ける
     });
 
+    // アラートイベントリスナー
+    this._timerService.on('alert', (alertData) => {
+      // eslint-disable-next-line no-console
+      console.log(`🔔 Alert fired at ${alertData.remainingSeconds} seconds`);
+      // AudioServiceが初期化済みで、アラートが有効な場合のみ音を再生
+      if (this._audioService && this._audioService.isInitialized()) {
+        const alertConfig = this._timerService.getAlertConfig();
+        // eslint-disable-next-line no-console
+        console.log(`🔊 Alert config:`, alertConfig);
+        if (alertConfig && alertConfig.enabled) {
+          // eslint-disable-next-line no-console
+          console.log(`🎵 Playing alert sound...`);
+          this._audioService.play();
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(`⚠️ Alert is disabled or config is missing`);
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`⚠️ AudioService not initialized yet`);
+      }
+    });
+
     // ControlPanelのイベントハンドラ
     if (this._controlPanel) {
       this._controlPanel.onStart = () => {
@@ -150,10 +189,19 @@ class App {
     // SettingsPanelのイベントハンドラ
     if (this._settingsPanel) {
       this._settingsPanel.onSave = (totalSeconds) => {
+        // タイマー時間を更新
         this._timerService.setDuration(totalSeconds);
+
+        // アラート設定を再読み込みしてサービスに反映
+        const alertConfig = StorageService.loadAlertConfig();
+        this._timerService.setAlertConfig(alertConfig);
+        if (this._audioService) {
+          this._audioService.setVolume(alertConfig.volume);
+        }
+
         this._updateUI();
         // eslint-disable-next-line no-console
-        console.log(`Timer duration set to ${totalSeconds} seconds`);
+        console.log(`Settings saved: ${totalSeconds}s, alerts: ${alertConfig.enabled}`);
       };
     }
   }
@@ -180,6 +228,48 @@ class App {
     if (this._settingsPanel) {
       this._settingsPanel.updateInputStates(state);
     }
+  }
+
+  /**
+   * ユーザーインタラクション後にAudioServiceを初期化する
+   *
+   * @private
+   * @description
+   * Web Audio APIの制限により、ユーザーインタラクション後に音声を初期化する必要があります。
+   * 最初のクリックまたはタッチイベントでAudioServiceを初期化します。
+   */
+  _initializeAudioOnUserInteraction() {
+    const initAudio = async () => {
+      try {
+        // 音声ファイルのパス（Vite base pathを考慮）
+        const audioUrl = '/presentation-timer/assets/sounds/alert.mp3';
+
+        // AudioServiceを初期化
+        await this._audioService.initialize(audioUrl);
+
+        // eslint-disable-next-line no-console
+        console.log('AudioService initialized successfully');
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Failed to initialize AudioService:', error);
+        // 音声が読み込めない場合でもアプリは動作続行
+      }
+    };
+
+    // 最初のユーザーインタラクションでAudioServiceを初期化
+    const events = ['click', 'touchstart', 'keydown'];
+    const handleUserInteraction = () => {
+      initAudio();
+      // イベントリスナーを削除（1回のみ実行）
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+    };
+
+    // 各イベントにリスナーを追加
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserInteraction, { once: true });
+    });
   }
 }
 

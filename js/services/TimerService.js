@@ -36,8 +36,9 @@ export class TimerService {
    * TimerServiceのコンストラクタ
    *
    * @param {number} [durationSeconds=300] - 初期タイマー時間（秒）
+   * @param {import('../models/AlertConfig.js').AlertConfig} [alertConfig=null] - アラート設定
    */
-  constructor(durationSeconds = 300) {
+  constructor(durationSeconds = 300, alertConfig = null) {
     /**
      * タイマーの現在の状態
      * @private
@@ -67,6 +68,20 @@ export class TimerService {
     this._completeFired = false;
 
     /**
+     * アラート設定
+     * @private
+     * @type {import('../models/AlertConfig.js').AlertConfig | null}
+     */
+    this._alertConfig = alertConfig;
+
+    /**
+     * 発火済みのアラートポイント（秒）
+     * @private
+     * @type {Set<number>}
+     */
+    this._firedAlertPoints = new Set();
+
+    /**
      * イベントリスナーのマップ
      * @private
      * @type {Map<string, Set<Function>>}
@@ -94,6 +109,7 @@ export class TimerService {
     this._state = createDefaultTimerState(durationSeconds);
     this._lastTickSecond = durationSeconds;
     this._completeFired = false;
+    this._firedAlertPoints.clear();
   }
 
   /**
@@ -189,6 +205,7 @@ export class TimerService {
     this._state = createDefaultTimerState(this._state.durationSeconds);
     this._lastTickSecond = this._state.durationSeconds;
     this._completeFired = false;
+    this._firedAlertPoints.clear();
   }
 
   /**
@@ -226,6 +243,38 @@ export class TimerService {
       this._updateElapsedTime();
     }
     return this._state.remainingSeconds;
+  }
+
+  /**
+   * アラート設定を更新する
+   *
+   * @param {import('../models/AlertConfig.js').AlertConfig} alertConfig - アラート設定
+   *
+   * @example
+   * ```javascript
+   * const alertConfig = { enabled: true, volume: 0.8, points: [60, 0] };
+   * timer.setAlertConfig(alertConfig);
+   * ```
+   */
+  setAlertConfig(alertConfig) {
+    this._alertConfig = alertConfig;
+    // アラート設定が変更されたら、発火済みポイントをクリア
+    this._firedAlertPoints.clear();
+  }
+
+  /**
+   * アラート設定を取得する
+   *
+   * @returns {import('../models/AlertConfig.js').AlertConfig | null} アラート設定
+   *
+   * @example
+   * ```javascript
+   * const alertConfig = timer.getAlertConfig();
+   * console.log(alertConfig.enabled); // true
+   * ```
+   */
+  getAlertConfig() {
+    return this._alertConfig;
   }
 
   /**
@@ -338,10 +387,49 @@ export class TimerService {
       // tickイベントを発火
       this._emit('tick', this.getState());
 
+      // アラート判定（running状態でアラートが有効な場合のみ）
+      this._checkAndFireAlert(currentSecond);
+
       // 0秒に到達したらcompleteイベントを発火（1回のみ）
       if (currentSecond === 0 && !this._completeFired) {
         this._completeFired = true;
         this._emit('complete', this.getState());
+      }
+    }
+  }
+
+  /**
+   * アラート発火判定を行う
+   *
+   * @private
+   * @param {number} currentSecond - 現在の残り時間（秒）
+   *
+   * @description
+   * アラート設定に基づいて、指定されたタイミングでalertイベントを発火します。
+   * - アラートが無効の場合は何もしません
+   * - 一時停止中は発火しません
+   * - 同じポイントで2回発火しないようにします
+   */
+  _checkAndFireAlert(currentSecond) {
+    // アラート設定がない、または無効な場合は何もしない
+    if (!this._alertConfig || !this._alertConfig.enabled) {
+      return;
+    }
+
+    // 一時停止中は発火しない
+    if (this._state.status !== 'running') {
+      return;
+    }
+
+    // アラートポイントをチェック
+    for (const point of this._alertConfig.points) {
+      // 現在の秒数がアラートポイントと一致し、まだ発火していない場合
+      if (currentSecond === point && !this._firedAlertPoints.has(point)) {
+        this._firedAlertPoints.add(point);
+        this._emit('alert', {
+          remainingSeconds: currentSecond,
+          alertPoint: point,
+        });
       }
     }
   }
