@@ -1,0 +1,312 @@
+/**
+ * @file responsive.css
+ * @description レスポンシブデザイン - iPad縦横、モバイル、デスクトップ対応
+ * @since 1.0.0
+ */
+
+/* ==========================================================================
+   iPad Portrait (縦向き) - 768px x 1024px
+   ========================================================================== */
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  :root {
+    --font-size-display: 10rem;
+    --spacing-xl: 2.5rem;
+  }
+
+  .app-container {
+    padding: var(--spacing-lg);
+  }
+
+  .timer-display__time {
+    font-size: var(--font-size-display);
+  }
+
+  .control-panel {
+    max-width: 700px;
+  }
+
+  .settings-panel {
+    max-width: 700px;
+  }
+}
+
+/* ==========================================================================
+   iPad Landscape (横向き) - 1024px x 768px
+   ========================================================================== */
+
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  :root {
+    --font-size-display: 14rem;
+    --spacing-xl: 3rem;
+  }
+
+  .app-container {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: var(--spacing-xl);
+  }
+
+  .timer-display {
+    flex: 1;
+    max-width: none;
+  }
+
+  .control-panel,
+  .settings-panel {
+    flex: 0 0 auto;
+    width: 300px;
+  }
+
+  /* 横向きでは設定とコントロールを縦に配置 */
+  .app-container > section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+}
+
+/* ==========================================================================
+   Mobile Portrait (縦向き) - 320px ~ 767px
+   ========================================================================== */
+
+@media (max-width: 767px) and (orientation: portrait) {
+  :root {
+    --font-size-display: 6rem;
+    --font-size-xl: 1.5rem;
+    --font-size-lg: 1.25rem;
+    --font-size-md: 1rem;
+    --spacing-xl: 1.5rem;
+    --spacing-lg: 1rem;
+    --spacing-md: 0.75rem;
+  }
+
+  .app-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-lg);
+  }
+
+  .timer-display {
+    padding: var(--spacing-md);
+  }
+
+  .timer-display__time {
+    font-size: var(--font-size-display);
+  }
+
+  .timer-display__status {
+    font-size: var(--font-size-md);
+  }
+
+  .control-panel {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    min-width: auto;
+    min-height: 50px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-md);
+  }
+
+  .settings-panel {
+    padding: var(--spacing-md);
+    max-width: 100%;
+  }
+
+  .settings-panel__title {
+    font-size: var(--font-size-lg);
+  }
+
+  .time-input-group__input {
+    max-width: 80px;
+  }
+}
+
+/* ==========================================================================
+   Mobile Landscape (横向き) - 568px ~ 926px (height)
+   ========================================================================== */
+
+@media (max-width: 926px) and (orientation: landscape) {
+  :root {
+    --font-size-display: 5rem;
+    --spacing-xl: 1rem;
+    --spacing-lg: 0.75rem;
+  }
+
+  .app-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-md);
+  }
+
+  .timer-display {
+    flex: 1;
+    padding: var(--spacing-sm);
+  }
+
+  .timer-display__time {
+    font-size: var(--font-size-display);
+  }
+
+  .timer-display__status {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+
+  .control-panel {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    max-width: 200px;
+  }
+
+  .btn {
+    width: 100%;
+    min-width: auto;
+    min-height: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+
+  .settings-panel {
+    display: none; /* 横向きでは設定パネルを非表示 */
+  }
+}
+
+/* ==========================================================================
+   Desktop - 1366px以上
+   ========================================================================== */
+
+@media (min-width: 1366px) {
+  :root {
+    --font-size-display: 16rem;
+    --spacing-xl: 4rem;
+    --spacing-xxl: 6rem;
+  }
+
+  .app-container {
+    padding: var(--spacing-xxl);
+  }
+
+  .timer-display {
+    max-width: 1400px;
+  }
+
+  .timer-display__time {
+    font-size: var(--font-size-display);
+  }
+
+  .control-panel {
+    max-width: 800px;
+    gap: var(--spacing-lg);
+  }
+
+  .btn {
+    min-width: 150px;
+    min-height: 70px;
+    padding: var(--spacing-lg) var(--spacing-xxl);
+    font-size: var(--font-size-xl);
+  }
+
+  .settings-panel {
+    max-width: 800px;
+  }
+}
+
+/* ==========================================================================
+   High DPI / Retina Displays
+   ========================================================================== */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion Preference
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .timer-display__time--negative {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode Support (将来の拡張用)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  /* デフォルトでダークモードのため、現時点では追加のスタイルは不要 */
+  /* 将来、ライトモード対応時にここにスタイルを追加 */
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+
+  .control-panel,
+  .settings-panel {
+    display: none;
+  }
+
+  .timer-display__time {
+    color: black;
+  }
+
+  .timer-display__time--negative {
+    color: #cc0000;
+  }
+}
+
+/* ==========================================================================
+   Touch Device Optimizations
+   ========================================================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  /* タッチデバイス用の最適化 */
+  .btn {
+    min-height: 48px; /* タッチターゲットの最小サイズ（Appleガイドライン） */
+    min-width: 48px;
+  }
+
+  .form-group__input {
+    min-height: 44px; /* タッチターゲットの最小サイズ */
+  }
+
+  /* ホバー効果を無効化 */
+  .btn:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* ==========================================================================
+   Orientation Change Animation Prevention
+   ========================================================================== */
+
+.no-transition {
+  transition: none !important;
+}

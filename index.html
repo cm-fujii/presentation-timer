@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="プレゼンテーション用タイマー - 大きく見やすい表示と音声アラート"
+    />
+    <meta name="theme-color" content="#1a1a1a" />
+
+    <!-- Apple Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Timer" />
+
+    <title>プレゼンテーション・タイマー</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+
+    <!-- PWA Manifest (Phase 6で追加予定) -->
+    <!-- <link rel="manifest" href="manifest.json" /> -->
+  </head>
+  <body>
+    <!-- メインコンテナ -->
+    <div id="app" class="app-container">
+      <!-- タイマー表示エリア -->
+      <main
+        id="timer-display"
+        class="timer-display"
+        role="main"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <!-- TimerDisplay コンポーネントがここにレンダリングされる -->
+      </main>
+
+      <!-- コントロールパネル -->
+      <section id="control-panel" class="control-panel" role="region" aria-label="タイマー操作">
+        <!-- ControlPanel コンポーネントがここにレンダリングされる -->
+      </section>
+
+      <!-- 設定パネル -->
+      <section id="settings-panel" class="settings-panel" role="region" aria-label="タイマー設定">
+        <!-- SettingsPanel コンポーネントがここにレンダリングされる -->
+      </section>
+    </div>
+
+    <!-- アプリケーション初期化 -->
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
