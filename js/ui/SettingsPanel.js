@@ -6,7 +6,7 @@
 
 import { StorageService } from '../services/StorageService.js';
 import { getTotalSeconds, isValidTimerConfig } from '../models/TimerConfig.js';
-import { createDefaultAlertConfig, isValidAlertConfig } from '../models/AlertConfig.js';
+import { isValidAlertConfig } from '../models/AlertConfig.js';
 
 /**
  * SettingsPanel - タイマーの設定を管理するコンポーネント

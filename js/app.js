@@ -148,18 +148,18 @@ class App {
       if (this._audioService && this._audioService.isInitialized()) {
         const alertConfig = this._timerService.getAlertConfig();
         // eslint-disable-next-line no-console
-        console.log(`🔊 Alert config:`, alertConfig);
+        console.log('🔊 Alert config:', alertConfig);
         if (alertConfig && alertConfig.enabled) {
           // eslint-disable-next-line no-console
-          console.log(`🎵 Playing alert sound...`);
+          console.log('🎵 Playing alert sound...');
           this._audioService.play();
         } else {
           // eslint-disable-next-line no-console
-          console.warn(`⚠️ Alert is disabled or config is missing`);
+          console.warn('⚠️ Alert is disabled or config is missing');
         }
       } else {
         // eslint-disable-next-line no-console
-        console.warn(`⚠️ AudioService not initialized yet`);
+        console.warn('⚠️ AudioService not initialized yet');
       }
     });
 
@@ -296,3 +296,46 @@ function initializeApp() {
 
 // アプリケーションを初期化
 initializeApp();
+
+/**
+ * Service Worker を登録する
+ *
+ * @description
+ * Service Workerをサポートしているブラウザでのみ登録します。
+ * オフライン対応とキャッシュ機能を有効化します。
+ */
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('/presentation-timer/sw.js', {
+          scope: '/presentation-timer/',
+        });
+
+        // eslint-disable-next-line no-console
+        console.log('[App] Service Worker registered successfully:', registration.scope);
+
+        // Service Workerの更新を検知
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // eslint-disable-next-line no-console
+              console.log('[App] New Service Worker available, please refresh');
+            }
+          });
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('[App] Service Worker registration failed:', error);
+      }
+    });
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn('[App] Service Worker is not supported in this browser');
+  }
+}
+
+// Service Workerを登録
+registerServiceWorker();
