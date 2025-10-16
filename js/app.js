@@ -244,10 +244,13 @@ class App {
   _initializeAudioOnUserInteraction() {
     const initAudio = async () => {
       try {
+        // ベースURLを取得（GitHub Pagesなどのサブディレクトリ対応）
+        const baseUrl = import.meta.env.BASE_URL || '/';
+
         // 複数の音声ファイルを読み込む
         const soundConfigs = [
-          { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-          { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' },
+          { type: SoundType.BELL, url: `${baseUrl}assets/sounds/bell.mp3` },
+          { type: SoundType.GONG, url: `${baseUrl}assets/sounds/gong.mp3` },
         ];
 
         // AudioServiceを初期化
