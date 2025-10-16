@@ -1,50 +1,211 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version Change: 1.0.0 → 1.0.1
+Modified Principles: N/A (Translation to Japanese - content unchanged)
+Added Sections: N/A
+Removed Sections: N/A
+Templates Requiring Updates:
+  ✅ .specify/templates/plan-template.md - Constitution Check section already present
+  ✅ .specify/templates/spec-template.md - Requirements sections align with principles
+  ✅ .specify/templates/tasks-template.md - Task categorization supports principle-driven tasks
+Follow-up TODOs: None
+-->
 
-## Core Principles
+# Presentation Timer プロジェクト憲法
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## 核心原則
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### I. コード品質第一
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**必須事項**: すべてのコードはマージ前に厳格な品質基準を満たす必要があります：
+- 型安全性の強制（TypeScript strictモードまたは同等）
+- リンティングエラーまたは警告ゼロ
+- 自動フォーマッタによる一貫したコードスタイル
+- 明確で自己文書化されたコード、意味のある命名
+- マジックナンバーやハードコードされた値の禁止 - 定数を使用
+- DRY原則（Don't Repeat Yourself）- 共通パターンの抽出
+- 単一責任原則 - 一つの関数には一つの役割
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**根拠**: 高いコード品質はバグを防ぎ、メンテナンス負荷を軽減し、長期的な開発速度を加速します。技術的負債は指数関数的に増大するため、ソースで防ぐ方が後で修正するより効率的です。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. テスト駆動開発（非交渉事項）
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**必須事項**: 厳格なテスト駆動開発（TDD）ワークフローに従うこと：
+1. 期待される動作のテストを**最初に**記述する
+2. テストを実行し、失敗することを確認する（赤）
+3. テストを通過させる最小限のコードを実装する（緑）
+4. テストを通過させたままリファクタリングする
+5. 失敗するテストを**決して**コミットしない
+6. 「後で書く」テストを**決して**スキップしない
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**テストカバレッジ要件**:
+- すべてのビジネスロジックに対するユニットテスト
+- すべてのユーザー向け機能に対するインテグレーションテスト
+- すべてのAPIエンドポイントに対する契約テスト
+- エッジケースとエラーシナリオのカバー
+- 最低80%のコードカバレッジ閾値
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**根拠**: TDDは実装開始前に要件が明確であることを保証し、生きたドキュメントを作成し、リグレッションを防ぎ、テスト可能性の制約を通じて良い設計を強制します。実装後に書かれたテストは、コードが何をすべきかではなく、何をするかをテストする傾向があります。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### III. ユーザー体験の一貫性
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**必須事項**: すべての機能にわたって一貫したUXを維持すること：
+- 統一されたデザイン言語とコンポーネントライブラリ
+- 予測可能なインタラクションパターン
+- アクセシビリティ基準（最低WCAG 2.1 Level AA）
+- レスポンシブデザイン - すべての対象デバイスで動作
+- 実行可能なガイダンス付きの明確なエラーメッセージ
+- すべての非同期操作のローディング状態とフィードバック
+- キーボードナビゲーションサポート
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**禁止事項**:
+- 正当な理由なしに新しいUIパターンを導入すること
+- 確立されたインタラクション規約を破ること
+- アクセシビリティレビューなしに機能を出荷すること
+- ユーザーを排除するプラットフォーム固有のパターンを使用すること
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**根拠**: 一貫性は認知負荷を軽減し、学習容易性を向上させ、すべてのユーザーがアプリケーションを効果的に使用できることを保証します。一貫性のないUXは混乱とサポート負担を生み出します。
+
+### IV. パフォーマンス基準
+
+**必須事項**: パフォーマンスベンチマークを満たすか超えること：
+- 初期ページロード: 3Gネットワークで3秒未満
+- Time to Interactive（TTI）: 5秒未満
+- First Contentful Paint（FCP）: 2秒未満
+- API応答時間: p95で200ms未満
+- バンドルサイズ予算: 監視と強制
+- 長時間実行セッションでメモリリークなし
+- スムーズなアニメーション: 対象デバイスで60fps
+
+**必須事項**: 以下の場合はパフォーマンステストが必要：
+- 初期ロードに影響を与える機能
+- コアレンダリングロジックへの変更
+- 新しい外部依存関係
+- データベースクエリまたはAPIコール
+
+**根拠**: パフォーマンスはユーザー満足度、コンバージョン率、アクセシビリティに直接影響します。遅いアプリケーションはユーザーをフラストレートさせ、限られたデバイスやネットワークを使用するユーザーにとって障壁となります。パフォーマンス問題は蓄積し、後で修正するのがより困難になります。
+
+### V. ドキュメンテーション卓越性
+
+**必須事項**: 包括的なドキュメントを維持すること：
+- すべてのパブリックAPIにJSDoc/TSDocでドキュメント化
+- クイックスタート、例、アーキテクチャ概要を含むREADME
+- 重要な選択に対するArchitecture Decision Records（ADR）
+- 使用例を含むコンポーネントドキュメント
+- セットアップとデプロイメント手順
+- 一般的な問題のトラブルシューティングガイド
+
+**必須事項**: ドキュメンテーション基準：
+- 対象読者（開発者、ユーザー、ステークホルダー）向けに記述
+- コード変更と同じPRで更新
+- 役立つ場合は例とビジュアルエイドを含む
+- コードと一緒にバージョン管理
+- 正確性と明確性のレビュー
+
+**根拠**: ドキュメントはオプションではなく、コアの成果物です。良いドキュメントはオンボーディング時間を削減し、繰り返される質問を防ぎ、セルフサービスを可能にし、組織知識を保存します。古いドキュメントはドキュメントがないよりも悪いです。
+
+## 開発基準
+
+### コードレビュー要件
+
+**必須事項**: マージ前に通過すること：
+- チームメンバーからの少なくとも1件の承認済みレビュー
+- すべての自動チェックが通過（テスト、lint、型チェック、ビルド）
+- パフォーマンス予算チェックが通過
+- アクセシビリティチェックが通過
+- ドキュメントが更新されている
+- 未解決のレビューコメントなし
+
+### Gitワークフロー
+
+**必須事項**:
+- mainからのフィーチャーブランチ（`[###-feature-name]`）
+- Conventional Commitsに従った説明的なコミットメッセージ
+- アトミックコミット - 1つのコミットに1つの論理的変更
+- PR作成前にmainをリベース
+- mainへのスカッシュマージ（クリーンな履歴を維持）
+
+**禁止事項**:
+- mainへの直接コミット
+- 共有ブランチへのフォースプッシュ
+- 認証情報、シークレット、機密データのコミット
+- コメントアウトされたコードやデバッグ文のコミット
+
+### 依存関係管理
+
+**必須事項**:
+- 新しい依存関係を正当化する（依存関係の肥大化を避ける）
+- 定期的なセキュリティ監査とアップデート
+- ロックファイルをコミットし最新に保つ
+- 各主要依存関係が選ばれた理由を文書化
+- よくメンテナンスされた人気のあるライブラリを優先
+
+**禁止事項**:
+- バンドルサイズへの影響を考慮せずに依存関係を追加
+- 非推奨またはメンテナンスされていないパッケージを使用
+- 開発依存関係をプロダクションバンドルに含める
+
+## 品質ゲート
+
+### コミット前ゲート
+
+gitフックを介して自動化：
+- リンティングとフォーマッティング
+- 型チェック
+- 変更されたファイルのユニットテスト
+- console.logやdebugger文がないこと
+
+### マージ前ゲート
+
+CI/CDを介して自動化：
+- すべてのテストが通過（ユニット、インテグレーション、契約）
+- コードカバレッジ閾値を満たす
+- ビルド成功
+- パフォーマンス予算を満たす
+- セキュリティスキャン通過
+- アクセシビリティチェック通過
+
+### デプロイメント前ゲート
+
+手動検証が必要：
+- ステージング環境で機能がテストされている
+- 受入基準が検証されている
+- 負荷下でパフォーマンスが検証されている
+- アクセシビリティが手動で検証されている
+- ドキュメントがレビューされている
+- ロールバック計画が文書化されている
+
+## ガバナンス
+
+### 改正手続き
+
+憲法の改正には以下が必要：
+1. 根拠を含む文書化された提案
+2. チームディスカッションとフィードバック期間
+3. プロジェクトメンテナーからの承認
+4. セマンティックバージョニングに従ったバージョンアップ：
+   - **MAJOR**: 後方互換性のない変更または原則の削除
+   - **MINOR**: 新しい原則またはセクションの追加
+   - **PATCH**: 明確化、表現の改善、誤字修正
+5. すべての依存テンプレートとドキュメントへの更新
+6. 破壊的変更に対する移行計画
+
+### 憲法の優位性
+
+この憲法は他のすべての開発プラクティスとガイドラインに優先します。矛盾がある場合、憲法の原則が優先されます。
+
+### コンプライアンスレビュー
+
+**必須事項**: すべてのプルリクエストは憲法原則への準拠を検証すること
+**必須事項**: 定期的なレトロスペクティブで遵守状況をレビューし改善を特定すること
+**必須事項**: 違反は書面で正当化し、より単純な代替案を文書化すること
+
+### 複雑性の正当化
+
+憲法原則を満たせない場合（例：パフォーマンス要件とコード品質が矛盾する場合）、以下を文書化すること：
+- どの原則が妥協されているか
+- この特定のケースでなぜ必要なのか
+- どのような単純な代替案が検討され却下されたか
+- 後でその妥協を解決するどのような計画が存在するか
+
+**バージョン**: 1.0.1 | **制定日**: 2025-10-16 | **最終改正日**: 2025-10-16
