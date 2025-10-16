@@ -405,10 +405,24 @@ export class SettingsPanel {
     previewButton.className = 'btn btn--icon alert-point-item__preview';
     previewButton.textContent = '🔊';
     previewButton.setAttribute('aria-label', 'Preview sound');
-    previewButton.addEventListener('click', () => {
-      if (this._audioService) {
-        this._audioService.preview(soundSelect.value);
+    previewButton.addEventListener('click', async () => {
+      if (!this._audioService) {
+        return;
       }
+
+      // AudioServiceが未初期化の場合は、初期化完了を待つ
+      if (!this._audioService.isInitialized()) {
+        // 少し待ってから再試行（初期化が進行中の可能性があるため）
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // それでも未初期化の場合は警告を出す
+        if (!this._audioService.isInitialized()) {
+          console.warn('AudioService is not initialized yet. Please click any button first.');
+          return;
+        }
+      }
+
+      this._audioService.preview(soundSelect.value);
     });
 
     // 削除ボタン
