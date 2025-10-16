@@ -98,8 +98,6 @@ export class ControlPanel {
     // Startボタンを作成
     this._startButton = this._createButton('Start', 'start', 'タイマーを開始', 'btn--primary');
     this._startButton.addEventListener('click', () => {
-      // eslint-disable-next-line no-console
-      console.log('Start button clicked, onStart:', this.onStart);
       if (this.onStart) {
         this.onStart();
       }

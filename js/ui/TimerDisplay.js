@@ -116,15 +116,12 @@ export class TimerDisplay {
    */
   update(state) {
     if (!this._timeElement || !this._statusElement) {
-      // eslint-disable-next-line no-console
       console.error('TimerDisplay not rendered yet');
       return;
     }
 
     // 時間表示を更新
     const timeText = formatTime(state.remainingSeconds);
-    // eslint-disable-next-line no-console
-    console.log('TimerDisplay update:', state, 'Formatted time:', timeText);
     this._timeElement.textContent = timeText;
 
     // マイナス時間の場合は赤色クラスを追加、そうでなければ削除

@@ -59,8 +59,6 @@ class App {
     // localStorageから設定を読み込む
     const config = StorageService.loadTimerConfig();
     const totalSeconds = getTotalSeconds(config);
-    // eslint-disable-next-line no-console
-    console.log('Loading config:', config, 'Total seconds:', totalSeconds);
 
     // TimerServiceを初期化
     this._timerService = new TimerService(totalSeconds);
@@ -73,8 +71,6 @@ class App {
 
     // 初期表示を更新
     this._updateUI();
-    // eslint-disable-next-line no-console
-    console.log('Initial UI updated with state:', this._timerService.getState());
   }
 
   /**
@@ -131,11 +127,7 @@ class App {
     // ControlPanelのイベントハンドラ
     if (this._controlPanel) {
       this._controlPanel.onStart = () => {
-        // eslint-disable-next-line no-console
-        console.log('Start button clicked, current state:', this._timerService.getState());
         this._timerService.start();
-        // eslint-disable-next-line no-console
-        console.log('After start, state:', this._timerService.getState());
         this._updateUI();
       };
 
