@@ -262,12 +262,13 @@ class App {
 
     // 最初のユーザーインタラクションでAudioServiceを初期化
     const events = ['click', 'touchstart', 'keydown'];
-    const handleUserInteraction = () => {
-      initAudio();
-      // イベントリスナーを削除（1回のみ実行）
+    const handleUserInteraction = async () => {
+      // イベントリスナーを即座に削除（1回のみ実行）
       events.forEach((event) => {
         document.removeEventListener(event, handleUserInteraction);
       });
+      // AudioServiceを初期化（awaitで完了を待つ）
+      await initAudio();
     };
 
     // 各イベントにリスナーを追加
