@@ -69,6 +69,13 @@ export class ControlPanel {
     this._resetButton = null;
 
     /**
+     * Restartボタン
+     * @private
+     * @type {HTMLButtonElement | null}
+     */
+    this._restartButton = null;
+
+    /**
      * イベントハンドラ
      * @type {Function | null}
      */
@@ -76,6 +83,7 @@ export class ControlPanel {
     this.onPause = null;
     this.onResume = null;
     this.onReset = null;
+    this.onRestart = null;
   }
 
   /**
@@ -134,11 +142,25 @@ export class ControlPanel {
       }
     });
 
+    // Restartボタンを作成
+    this._restartButton = this._createButton(
+      'Restart',
+      'restart',
+      'タイマーをリセットして開始',
+      'btn--warning'
+    );
+    this._restartButton.addEventListener('click', () => {
+      if (this.onRestart) {
+        this.onRestart();
+      }
+    });
+
     // コンテナに追加
     this._container.appendChild(this._startButton);
     this._container.appendChild(this._pauseButton);
     this._container.appendChild(this._resumeButton);
     this._container.appendChild(this._resetButton);
+    this._container.appendChild(this._restartButton);
   }
 
   /**
@@ -159,34 +181,43 @@ export class ControlPanel {
    * ```
    */
   updateButtonStates(state) {
-    if (!this._startButton || !this._pauseButton || !this._resumeButton || !this._resetButton) {
+    if (
+      !this._startButton ||
+      !this._pauseButton ||
+      !this._resumeButton ||
+      !this._resetButton ||
+      !this._restartButton
+    ) {
       console.error('ControlPanel not rendered yet');
       return;
     }
 
     switch (state.status) {
       case 'idle':
-        // idle: Start有効、Pause/Resume非表示、Reset無効
+        // idle: Start有効、Pause/Resume非表示、Reset無効、Restart無効
         this._startButton.disabled = false;
         this._pauseButton.style.display = 'none';
         this._resumeButton.style.display = 'none';
         this._resetButton.disabled = true;
+        this._restartButton.disabled = true;
         break;
 
       case 'running':
-        // running: Start無効、Pause表示、Resume非表示、Reset有効
+        // running: Start無効、Pause表示、Resume非表示、Reset有効、Restart有効
         this._startButton.disabled = true;
         this._pauseButton.style.display = 'inline-flex';
         this._resumeButton.style.display = 'none';
         this._resetButton.disabled = false;
+        this._restartButton.disabled = false;
         break;
 
       case 'paused':
-        // paused: Start無効、Pause非表示、Resume表示、Reset有効
+        // paused: Start無効、Pause非表示、Resume表示、Reset有効、Restart有効
         this._startButton.disabled = true;
         this._pauseButton.style.display = 'none';
         this._resumeButton.style.display = 'inline-flex';
         this._resetButton.disabled = false;
+        this._restartButton.disabled = false;
         break;
 
       default:

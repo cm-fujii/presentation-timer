@@ -187,6 +187,11 @@ class App {
         this._timerService.reset();
         this._updateUI();
       };
+
+      this._controlPanel.onRestart = () => {
+        this._timerService.restart();
+        this._updateUI();
+      };
     }
 
     // SettingsPanelのイベントハンドラ

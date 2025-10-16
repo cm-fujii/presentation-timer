@@ -209,6 +209,29 @@ export class TimerService {
   }
 
   /**
+   * タイマーをリセットして自動的に開始する
+   *
+   * @description
+   * reset()を実行した後、自動的にstart()を呼び出します。
+   * これにより、ユーザーは1回のクリックでタイマーを再開始できます。
+   *
+   * @example
+   * ```javascript
+   * const timer = new TimerService();
+   * timer.setDuration(300);
+   * timer.start();
+   * // ... 時間が経過
+   * timer.restart(); // リセット + 開始を1ステップで実行
+   * ```
+   *
+   * @since 1.1.0
+   */
+  restart() {
+    this.reset();
+    this.start();
+  }
+
+  /**
    * タイマーの現在の状態を取得する
    *
    * @returns {import('../models/TimerState.js').TimerState} タイマーの状態

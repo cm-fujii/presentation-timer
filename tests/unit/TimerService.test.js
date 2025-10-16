@@ -415,4 +415,71 @@ describe('TimerService', () => {
       // expect(callback).not.toHaveBeenCalled();
     });
   });
+
+  describe('restart', () => {
+    it('should call reset() then start()', () => {
+      // TODO: Implement TimerService.restart()
+      // const service = new TimerService();
+      // const resetSpy = vi.spyOn(service, 'reset');
+      // const startSpy = vi.spyOn(service, 'start');
+      // service.setDuration(300);
+      // service.restart();
+      // expect(resetSpy).toHaveBeenCalledTimes(1);
+      // expect(startSpy).toHaveBeenCalledTimes(1);
+      // expect(resetSpy).toHaveBeenCalledBefore(startSpy);
+    });
+
+    it('should reset elapsedSeconds to 0', () => {
+      // TODO: Implement TimerService.restart()
+      // const service = new TimerService();
+      // service.setDuration(300);
+      // service.start();
+      // await new Promise(resolve => setTimeout(resolve, 2000));
+      // service.restart();
+      // const state = service.getState();
+      // expect(state.elapsedSeconds).toBe(0);
+    });
+
+    it('should set remainingSeconds to durationSeconds', () => {
+      // TODO: Implement TimerService.restart()
+      // const service = new TimerService();
+      // service.setDuration(300);
+      // service.start();
+      // await new Promise(resolve => setTimeout(resolve, 2000));
+      // service.restart();
+      // const state = service.getState();
+      // expect(state.remainingSeconds).toBe(300);
+    });
+
+    it('should clear _firedAlertPoints', () => {
+      // TODO: Implement TimerService.restart()
+      // const service = new TimerService();
+      // const alertConfig = {
+      //   enabled: true,
+      //   volume: 0.8,
+      //   points: [{ seconds: 60, soundType: 'bell' }]
+      // };
+      // service.setAlertConfig(alertConfig);
+      // service.setDuration(100);
+      // service.start();
+      // // アラートが発火するまで待つ（仮想）
+      // // service._firedAlertPoints.add(60);
+      // service.restart();
+      // // restart後、同じアラートポイントで再度発火できることを確認
+      // // expect(service._firedAlertPoints.size).toBe(0);
+    });
+
+    it('should set status to running', () => {
+      // TODO: Implement TimerService.restart()
+      // const service = new TimerService();
+      // service.setDuration(300);
+      // service.start();
+      // service.pause();
+      // const beforeState = service.getState();
+      // expect(beforeState.status).toBe('paused');
+      // service.restart();
+      // const afterState = service.getState();
+      // expect(afterState.status).toBe('running');
+    });
+  });
 });

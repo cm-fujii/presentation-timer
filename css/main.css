@@ -263,6 +263,14 @@ input {
   background-color: #ef5350;
 }
 
+.btn--warning {
+  background-color: var(--color-warning);
+}
+
+.btn--warning:hover:not(:disabled) {
+  background-color: #ffa726;
+}
+
 /* ==========================================================================
    Settings Panel
    ========================================================================== */
