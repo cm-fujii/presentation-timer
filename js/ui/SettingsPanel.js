@@ -6,7 +6,8 @@
 
 import { StorageService } from '../services/StorageService.js';
 import { getTotalSeconds, isValidTimerConfig } from '../models/TimerConfig.js';
-import { isValidAlertConfig } from '../models/AlertConfig.js';
+import { isValidAlertConfig, createAlertPoint } from '../models/AlertConfig.js';
+import { SoundType } from '../models/SoundType.js';
 
 /**
  * SettingsPanel - タイマーの設定を管理するコンポーネント
@@ -34,14 +35,22 @@ export class SettingsPanel {
    * SettingsPanelのコンストラクタ
    *
    * @param {HTMLElement} container - 表示先のコンテナ要素
+   * @param {import('../services/AudioService.js').AudioService} [audioService=null] - AudioServiceインスタンス
    */
-  constructor(container) {
+  constructor(container, audioService = null) {
     /**
      * コンテナ要素
      * @private
      * @type {HTMLElement}
      */
     this._container = container;
+
+    /**
+     * AudioServiceインスタンス（音のプレビュー用）
+     * @private
+     * @type {import('../services/AudioService.js').AudioService | null}
+     */
+    this._audioService = audioService;
 
     /**
      * 分入力欄
@@ -307,6 +316,12 @@ export class SettingsPanel {
     pointsLabel.className = 'form-group__label';
     pointsLabel.textContent = 'Alert Points (seconds remaining)';
 
+    // デフォルト音の説明
+    const defaultSoundHint = document.createElement('p');
+    defaultSoundHint.className = 'form-group__hint';
+    defaultSoundHint.textContent = 'Default sound for new alert points: Gong (銅鑼)';
+    defaultSoundHint.setAttribute('aria-label', 'Default alert sound is Gong');
+
     this._alertPointsContainer = document.createElement('div');
     this._alertPointsContainer.className = 'alert-points-container';
 
@@ -318,6 +333,7 @@ export class SettingsPanel {
     addPointButton.addEventListener('click', () => this._addAlertPoint());
 
     pointsGroup.appendChild(pointsLabel);
+    pointsGroup.appendChild(defaultSoundHint);
     pointsGroup.appendChild(this._alertPointsContainer);
     pointsGroup.appendChild(addPointButton);
 
@@ -347,8 +363,9 @@ export class SettingsPanel {
    *
    * @private
    * @param {number} [seconds=60] - 秒数（デフォルト: 60秒）
+   * @param {string} [soundType=SoundType.GONG] - 音の種類（デフォルト: 銅鑼）
    */
-  _addAlertPoint(seconds = 60) {
+  _addAlertPoint(seconds = 60, soundType = SoundType.GONG) {
     if (!this._alertPointsContainer) {
       return;
     }
@@ -356,6 +373,7 @@ export class SettingsPanel {
     const pointItem = document.createElement('div');
     pointItem.className = 'alert-point-item';
 
+    // 秒数入力
     const input = document.createElement('input');
     input.type = 'number';
     input.className = 'form-group__input alert-point-item__input';
@@ -364,6 +382,50 @@ export class SettingsPanel {
     input.value = String(seconds);
     input.setAttribute('aria-label', 'Alert point seconds');
 
+    // 音選択ドロップダウン
+    const soundSelect = document.createElement('select');
+    soundSelect.className = 'form-group__select alert-point-item__sound-select';
+    soundSelect.setAttribute('aria-label', 'Select alert sound');
+
+    const bellOption = document.createElement('option');
+    bellOption.value = SoundType.BELL;
+    bellOption.textContent = 'Bell (ベル)';
+
+    const gongOption = document.createElement('option');
+    gongOption.value = SoundType.GONG;
+    gongOption.textContent = 'Gong (銅鑼)';
+
+    soundSelect.appendChild(bellOption);
+    soundSelect.appendChild(gongOption);
+    soundSelect.value = soundType;
+
+    // プレビューボタン
+    const previewButton = document.createElement('button');
+    previewButton.type = 'button';
+    previewButton.className = 'btn btn--icon alert-point-item__preview';
+    previewButton.textContent = '🔊';
+    previewButton.setAttribute('aria-label', 'Preview sound');
+    previewButton.addEventListener('click', async () => {
+      if (!this._audioService) {
+        return;
+      }
+
+      // AudioServiceが未初期化の場合は、初期化完了を待つ
+      if (!this._audioService.isInitialized()) {
+        // 少し待ってから再試行（初期化が進行中の可能性があるため）
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // それでも未初期化の場合は警告を出す
+        if (!this._audioService.isInitialized()) {
+          console.warn('AudioService is not initialized yet. Please click any button first.');
+          return;
+        }
+      }
+
+      this._audioService.preview(soundSelect.value);
+    });
+
+    // 削除ボタン
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'btn btn--danger btn--small';
@@ -374,6 +436,8 @@ export class SettingsPanel {
     });
 
     pointItem.appendChild(input);
+    pointItem.appendChild(soundSelect);
+    pointItem.appendChild(previewButton);
     pointItem.appendChild(removeButton);
     this._alertPointsContainer.appendChild(pointItem);
   }
@@ -428,9 +492,16 @@ export class SettingsPanel {
     if (this._alertPointsContainer) {
       // 既存のポイントをクリア
       this._alertPointsContainer.innerHTML = '';
-      // 各ポイントを追加
+      // 各ポイントを追加（AlertPoint形式対応）
       alertConfig.points.forEach((point) => {
-        this._addAlertPoint(point);
+        // 旧形式（number）と新形式（AlertPoint）の両方に対応
+        if (typeof point === 'number') {
+          // 旧形式: number → デフォルトでGONGを使用
+          this._addAlertPoint(point, SoundType.GONG);
+        } else {
+          // 新形式: AlertPoint
+          this._addAlertPoint(point.seconds, point.soundType);
+        }
       });
     }
   }
@@ -503,15 +574,26 @@ export class SettingsPanel {
       return null;
     }
 
-    // アラートポイントを収集
-    const pointInputs = this._alertPointsContainer.querySelectorAll('input[type="number"]');
+    // アラートポイントを収集（AlertPoint形式）
+    const pointItems = this._alertPointsContainer.querySelectorAll('.alert-point-item');
     const points = [];
-    for (const input of pointInputs) {
-      const value = parseInt(input.value, 10);
-      if (isNaN(value) || value < 0) {
+
+    for (const item of pointItems) {
+      const input = item.querySelector('input[type="number"]');
+      const soundSelect = item.querySelector('select');
+
+      if (!input || !soundSelect) {
+        return null; // 要素が見つからない
+      }
+
+      const seconds = parseInt(input.value, 10);
+      const soundType = soundSelect.value;
+
+      if (isNaN(seconds) || seconds < 0) {
         return null; // 無効な値
       }
-      points.push(value);
+
+      points.push(createAlertPoint(seconds, soundType));
     }
 
     const alertConfig = {

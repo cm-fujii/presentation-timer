@@ -4,15 +4,28 @@
 
 ## 必要なファイル
 
-- `alert.mp3` - デフォルトアラート音（必須）
+- `alert.mp3` - 既存のアラート音（後方互換性のため保持）
+- `gong.mp3` - 銅鑼のアラート音（alert.mp3と同じ音源）
+- `bell.mp3` - ベルのアラート音（TODO: 適切なベル音に置き換える）
 
 ## 現在使用している音源
+
+### 銅鑼（gong.mp3 / alert.mp3）
 
 現在のアラート音は、以下のサイトより提供されているフリー効果音を使用しています：
 
 - **提供元**: [効果音 G-SOZAI](https://koukaon.g-sozai.com/)
 - **音源ページ**: [カーソル移動4](https://koukaon.g-sozai.com/se-236.html)
 - **ライセンス**: フリー素材（商用利用可）
+
+### ベル（bell.mp3）
+
+**TODO**: 適切なベルの音源を追加してください。
+
+推奨音源：
+
+- [Freesound - Bell sounds](https://freesound.org/search/?q=bell)
+- [効果音 G-SOZAI - ベル](https://koukaon.g-sozai.com/)
 
 ## 要件
 
@@ -27,6 +40,7 @@
    - [Freesound](https://freesound.org/)
    - [SoundBible](https://soundbible.com/)
    - [Zapsplat](https://www.zapsplat.com/)
+   - [効果音 G-SOZAI](https://koukaon.g-sozai.com/)
 
 2. **自作**:
    - Audacityなどの音声編集ソフトで作成
@@ -35,8 +49,8 @@
 ## 配置方法
 
 ```bash
-# 音声ファイルをこのディレクトリにコピー
-cp /path/to/your/sound.mp3 assets/sounds/alert.mp3
+# ベルの音声ファイルをこのディレクトリにコピー
+cp /path/to/your/bell-sound.mp3 assets/sounds/bell.mp3
 ```
 
 ## テスト
@@ -48,7 +62,7 @@ cp /path/to/your/sound.mp3 assets/sounds/alert.mp3
 npm run dev
 
 # ブラウザで http://localhost:5173 を開く
-# アラート設定で音声が再生されることを確認
+# 設定パネルでアラート音を選択し、プレビューボタンで再生確認
 ```
 
 ## 注意事項
@@ -56,3 +70,4 @@ npm run dev
 - **著作権**: 使用する音声ファイルのライセンスを確認してください
 - **ブラウザ対応**: MP3はすべてのモダンブラウザでサポートされています
 - **Safari制約**: ユーザーインタラクション（ボタンクリック等）後でないと音声は再生されません
+- **後方互換性**: alert.mp3は既存のコードとの互換性のため保持していますが、新しい実装ではgong.mpとbell.mp3を使用します

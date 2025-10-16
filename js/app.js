@@ -11,6 +11,7 @@ import { TimerDisplay } from './ui/TimerDisplay.js';
 import { ControlPanel } from './ui/ControlPanel.js';
 import { SettingsPanel } from './ui/SettingsPanel.js';
 import { getTotalSeconds } from './models/TimerConfig.js';
+import { SoundType } from './models/SoundType.js';
 
 /**
  * アプリケーションクラス
@@ -113,10 +114,10 @@ class App {
       console.error('Control panel container not found');
     }
 
-    // SettingsPanel
+    // SettingsPanel (AudioServiceを渡してプレビュー機能を有効化)
     const settingsPanelContainer = document.getElementById('settings-panel');
     if (settingsPanelContainer) {
-      this._settingsPanel = new SettingsPanel(settingsPanelContainer);
+      this._settingsPanel = new SettingsPanel(settingsPanelContainer, this._audioService);
       this._settingsPanel.render();
     } else {
       console.error('Settings panel container not found');
@@ -143,7 +144,9 @@ class App {
     // アラートイベントリスナー
     this._timerService.on('alert', (alertData) => {
       // eslint-disable-next-line no-console
-      console.log(`🔔 Alert fired at ${alertData.remainingSeconds} seconds`);
+      console.log(
+        `🔔 Alert fired at ${alertData.remainingSeconds} seconds (${alertData.soundType})`
+      );
       // AudioServiceが初期化済みで、アラートが有効な場合のみ音を再生
       if (this._audioService && this._audioService.isInitialized()) {
         const alertConfig = this._timerService.getAlertConfig();
@@ -151,8 +154,8 @@ class App {
         console.log('🔊 Alert config:', alertConfig);
         if (alertConfig && alertConfig.enabled) {
           // eslint-disable-next-line no-console
-          console.log('🎵 Playing alert sound...');
-          this._audioService.play();
+          console.log(`🎵 Playing alert sound: ${alertData.soundType}...`);
+          this._audioService.play(alertData.soundType);
         } else {
           // eslint-disable-next-line no-console
           console.warn('⚠️ Alert is disabled or config is missing');
@@ -241,14 +244,17 @@ class App {
   _initializeAudioOnUserInteraction() {
     const initAudio = async () => {
       try {
-        // 音声ファイルのパス（Vite base pathを考慮）
-        const audioUrl = '/presentation-timer/assets/sounds/alert.mp3';
+        // 複数の音声ファイルを読み込む
+        const soundConfigs = [
+          { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
+          { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' },
+        ];
 
         // AudioServiceを初期化
-        await this._audioService.initialize(audioUrl);
+        await this._audioService.initialize(soundConfigs);
 
         // eslint-disable-next-line no-console
-        console.log('AudioService initialized successfully');
+        console.log('AudioService initialized successfully with multiple sounds');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.warn('Failed to initialize AudioService:', error);
@@ -258,12 +264,13 @@ class App {
 
     // 最初のユーザーインタラクションでAudioServiceを初期化
     const events = ['click', 'touchstart', 'keydown'];
-    const handleUserInteraction = () => {
-      initAudio();
-      // イベントリスナーを削除（1回のみ実行）
+    const handleUserInteraction = async () => {
+      // イベントリスナーを即座に削除（1回のみ実行）
       events.forEach((event) => {
         document.removeEventListener(event, handleUserInteraction);
       });
+      // AudioServiceを初期化（awaitで完了を待つ）
+      await initAudio();
     };
 
     // 各イベントにリスナーを追加
