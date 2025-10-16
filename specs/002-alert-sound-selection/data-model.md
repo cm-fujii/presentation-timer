@@ -14,7 +14,7 @@
 
 ### 定義
 
-```javascript
+````javascript
 /**
  * アラート音の種類
  *
@@ -37,12 +37,12 @@ export const SoundType = Object.freeze({
    */
   GONG: 'gong',
 });
-```
+````
 
 ### フィールド
 
-| フィールド | 型     | 値      | 説明           |
-| ---------- | ------ | ------- | -------------- |
+| フィールド | 型     | 値       | 説明           |
+| ---------- | ------ | -------- | -------------- |
 | BELL       | string | `'bell'` | ベルの音を表す |
 | GONG       | string | `'gong'` | 銅鑼の音を表す |
 
@@ -79,7 +79,7 @@ console.log(isValidSoundType('invalid')); // false
 
 ### 定義
 
-```javascript
+````javascript
 /**
  * アラートポイント設定
  *
@@ -102,18 +102,18 @@ console.log(isValidSoundType('invalid')); // false
  * };
  * ```
  */
-```
+````
 
 ### フィールド
 
-| フィールド | 型       | 制約                      | 説明                           |
-| ---------- | -------- | ------------------------- | ------------------------------ |
-| seconds    | number   | >= 0, 整数                | アラートを鳴らすタイミング（秒） |
-| soundType  | SoundType | SoundType enumのいずれか | 使用する音の種類               |
+| フィールド | 型        | 制約                     | 説明                             |
+| ---------- | --------- | ------------------------ | -------------------------------- |
+| seconds    | number    | >= 0, 整数               | アラートを鳴らすタイミング（秒） |
+| soundType  | SoundType | SoundType enumのいずれか | 使用する音の種類                 |
 
 ### ファクトリー関数
 
-```javascript
+````javascript
 /**
  * デフォルトのAlertPointを作成する
  *
@@ -133,7 +133,7 @@ export function createAlertPoint(seconds, soundType = SoundType.GONG) {
     soundType,
   };
 }
-```
+````
 
 ### バリデーション
 
@@ -164,7 +164,7 @@ export function isValidAlertPoint(point) {
 
 ### 定義
 
-```javascript
+````javascript
 /**
  * アラート音の設定
  *
@@ -198,27 +198,28 @@ export function isValidAlertPoint(point) {
  * };
  * ```
  */
-```
+````
 
 ### フィールド
 
-| フィールド | 型           | 制約          | デフォルト値 | 説明                           |
-| ---------- | ------------ | ------------- | ------------ | ------------------------------ |
-| enabled    | boolean      | true/false    | true         | アラート音が有効かどうか       |
-| volume     | number       | 0.0～1.0      | 0.8          | 音量                           |
-| points     | AlertPoint[] | 空配列可      | 下記参照     | アラートポイントの配列         |
+| フィールド | 型           | 制約       | デフォルト値 | 説明                     |
+| ---------- | ------------ | ---------- | ------------ | ------------------------ |
+| enabled    | boolean      | true/false | true         | アラート音が有効かどうか |
+| volume     | number       | 0.0～1.0   | 0.8          | 音量                     |
+| points     | AlertPoint[] | 空配列可   | 下記参照     | アラートポイントの配列   |
 
 **デフォルトpoints**:
+
 ```javascript
 [
   { seconds: 60, soundType: SoundType.GONG },
-  { seconds: 0, soundType: SoundType.GONG }
-]
+  { seconds: 0, soundType: SoundType.GONG },
+];
 ```
 
 ### ファクトリー関数
 
-```javascript
+````javascript
 /**
  * デフォルトのAlertConfigを作成する
  *
@@ -247,13 +248,13 @@ export function createDefaultAlertConfig() {
     ],
   };
 }
-```
+````
 
 ### 操作関数
 
 #### アラートポイントの追加
 
-```javascript
+````javascript
 /**
  * アラートポイントを追加する
  *
@@ -288,11 +289,11 @@ export function addAlertPoint(config, point) {
     points: newPoints.sort((a, b) => b.seconds - a.seconds), // 降順ソート
   };
 }
-```
+````
 
 #### アラートポイントの削除
 
-```javascript
+````javascript
 /**
  * アラートポイントを削除する
  *
@@ -317,11 +318,11 @@ export function removeAlertPoint(config, seconds) {
     points: config.points.filter((point) => point.seconds !== seconds),
   };
 }
-```
+````
 
 #### アラートポイントの音変更
 
-```javascript
+````javascript
 /**
  * 特定のアラートポイントの音を変更する
  *
@@ -345,11 +346,11 @@ export function updateAlertPointSound(config, seconds, newSoundType) {
     ),
   };
 }
-```
+````
 
 ### バリデーション
 
-```javascript
+````javascript
 /**
  * AlertConfigが有効かどうかを検証する
  *
@@ -379,7 +380,7 @@ export function isValidAlertConfig(config) {
     config.points.every((point) => isValidAlertPoint(point))
   );
 }
-```
+````
 
 ## 4. 後方互換性サポート
 
@@ -387,7 +388,7 @@ export function isValidAlertConfig(config) {
 
 ### マイグレーション関数
 
-```javascript
+````javascript
 /**
  * 旧形式のAlertConfigを新形式に移行する
  *
@@ -433,7 +434,7 @@ export function migrateAlertConfig(config) {
   // 既に新形式の場合はそのまま返す
   return config;
 }
-```
+````
 
 ## データフロー
 

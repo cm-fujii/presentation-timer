@@ -132,10 +132,7 @@ export function createDefaultAlertConfig() {
   return {
     enabled: true,
     volume: 0.8,
-    points: [
-      createAlertPoint(60, SoundType.GONG),
-      createAlertPoint(0, SoundType.GONG),
-    ],
+    points: [createAlertPoint(60, SoundType.GONG), createAlertPoint(0, SoundType.GONG)],
   };
 }
 

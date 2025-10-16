@@ -335,10 +335,7 @@ describe('AlertConfig', () => {
         {
           enabled: true,
           volume: 0.5,
-          points: [
-            createAlertPoint(60, SoundType.BELL),
-            createAlertPoint(0, SoundType.GONG),
-          ],
+          points: [createAlertPoint(60, SoundType.BELL), createAlertPoint(0, SoundType.GONG)],
         },
         {
           enabled: false,

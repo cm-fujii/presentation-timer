@@ -413,7 +413,7 @@ export class SettingsPanel {
       // AudioServiceが未初期化の場合は、初期化完了を待つ
       if (!this._audioService.isInitialized()) {
         // 少し待ってから再試行（初期化が進行中の可能性があるため）
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         // それでも未初期化の場合は警告を出す
         if (!this._audioService.isInitialized()) {

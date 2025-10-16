@@ -141,10 +141,8 @@ export function createDefaultAlertConfig() {
 export function updateAlertPointSound(config, seconds, newSoundType) {
   return {
     ...config,
-    points: config.points.map(point =>
-      point.seconds === seconds
-        ? { ...point, soundType: newSoundType }
-        : point
+    points: config.points.map((point) =>
+      point.seconds === seconds ? { ...point, soundType: newSoundType } : point
     ),
   };
 }
@@ -272,7 +270,7 @@ function migrateAlertConfig(config) {
   if (config.points.length > 0 && typeof config.points[0] === 'number') {
     return {
       ...config,
-      points: config.points.map(seconds => ({
+      points: config.points.map((seconds) => ({
         seconds,
         soundType: SoundType.GONG, // デフォルトは銅鑼
       })),
@@ -352,14 +350,18 @@ import { AudioService } from './services/AudioService.js';
 
 const audioService = new AudioService();
 
-document.addEventListener('click', async () => {
-  if (!audioService.isInitialized()) {
-    await audioService.initialize([
-      { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' },
-    ]);
-  }
-}, { once: true });
+document.addEventListener(
+  'click',
+  async () => {
+    if (!audioService.isInitialized()) {
+      await audioService.initialize([
+        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
+        { type: SoundType.GONG, url: '/assets/sounds/gong.mp3' },
+      ]);
+    }
+  },
+  { once: true }
+);
 ```
 
 ## テスト
@@ -437,6 +439,7 @@ test('User can select different sounds for alert points', async ({ page }) => {
 **原因**: AudioContextが初期化されていない、またはブラウザの自動再生ポリシー
 
 **解決方法**:
+
 1. ユーザーインタラクション後にAudioServiceを初期化していることを確認
 2. ブラウザのコンソールでエラーを確認
 3. `audioService.isInitialized()`がtrueであることを確認
@@ -446,6 +449,7 @@ test('User can select different sounds for alert points', async ({ page }) => {
 **原因**: localStorageが無効、またはバリデーションエラー
 
 **解決方法**:
+
 1. ブラウザのlocalStorageが有効か確認
 2. `isValidAlertConfig(config)`でバリデーション実行
 3. コンソールでStorageServiceのエラーログを確認
@@ -455,6 +459,7 @@ test('User can select different sounds for alert points', async ({ page }) => {
 **原因**: migrateAlertConfig関数が呼ばれていない
 
 **解決方法**:
+
 1. StorageService.loadAlertConfig()内でmigrateAlertConfig()を呼んでいるか確認
 2. localStorageのalertConfigを手動削除して再度テスト
 

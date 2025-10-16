@@ -3,7 +3,7 @@
  * @description タイマーの統合テスト - TimerServiceとTimerDisplayの連携
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { StorageService } from '../../js/services/StorageService.js';
 import { SoundType } from '../../js/models/SoundType.js';
 
@@ -345,7 +345,7 @@ describe('TimerFlow Integration Tests', () => {
       const oldConfig = {
         enabled: true,
         volume: 0.8,
-        points: [60, 0] // 旧形式: number[]
+        points: [60, 0], // 旧形式: number[]
       };
 
       localStorage.setItem('presentation-timer:alert', JSON.stringify(oldConfig));
@@ -356,11 +356,11 @@ describe('TimerFlow Integration Tests', () => {
       expect(loaded.points).toHaveLength(2);
       expect(loaded.points[0]).toEqual({
         seconds: 60,
-        soundType: SoundType.GONG // デフォルトは銅鑼
+        soundType: SoundType.GONG, // デフォルトは銅鑼
       });
       expect(loaded.points[1]).toEqual({
         seconds: 0,
-        soundType: SoundType.GONG
+        soundType: SoundType.GONG,
       });
     });
 

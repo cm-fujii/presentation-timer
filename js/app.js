@@ -144,7 +144,9 @@ class App {
     // アラートイベントリスナー
     this._timerService.on('alert', (alertData) => {
       // eslint-disable-next-line no-console
-      console.log(`🔔 Alert fired at ${alertData.remainingSeconds} seconds (${alertData.soundType})`);
+      console.log(
+        `🔔 Alert fired at ${alertData.remainingSeconds} seconds (${alertData.soundType})`
+      );
       // AudioServiceが初期化済みで、アラートが有効な場合のみ音を再生
       if (this._audioService && this._audioService.isInitialized()) {
         const alertConfig = this._timerService.getAlertConfig();

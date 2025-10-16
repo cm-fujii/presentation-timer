@@ -163,12 +163,11 @@ export class StorageService {
 
     // 旧形式を検出: points が number[] の場合
     if (typeof config.points[0] === 'number') {
+      // eslint-disable-next-line no-console
       console.info('Migrating old alert config format to new format');
       return {
         ...config,
-        points: config.points.map((seconds) =>
-          createAlertPoint(seconds, SoundType.GONG)
-        ),
+        points: config.points.map((seconds) => createAlertPoint(seconds, SoundType.GONG)),
       };
     }
 

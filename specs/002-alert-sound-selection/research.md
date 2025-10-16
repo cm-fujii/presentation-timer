@@ -19,12 +19,14 @@
 **決定**: **選択肢1: AudioServiceを拡張**
 
 **根拠**:
+
 - **既存コードとの一貫性**: 既存のAudioServiceのパターンを踏襲し、学習コストを最小化
 - **メモリ効率**: すべての音声バッファを1つのAudioContextで管理することで、リソースを効率的に使用
 - **保守性**: 単一のサービスクラスで音声管理が完結し、デバッグとテストが容易
 - **拡張性**: 将来的に音の種類を増やす場合も、Mapに追加するだけで対応可能
 
 **実装詳細**:
+
 ```javascript
 // SoundType enum
 export const SoundType = {
@@ -67,12 +69,14 @@ class AudioService {
 **決定**: **選択肢2: pointsを{seconds, soundType}オブジェクトの配列に変更**
 
 **根拠**:
+
 - **データの結合性**: アラートポイント(seconds)と音の種類(soundType)は密接に関連しており、1つのデータ構造で管理すべき
 - **型安全性**: JSDocで明確に型定義でき、バリデーションが容易
 - **シンプルさ**: 追加のマッピングデータ構造が不要で、コードが簡潔になる
 - **既存コードへの影響**: AlertConfigの変更は局所的で、移行も容易
 
 **実装詳細**:
+
 ```javascript
 /**
  * @typedef {Object} AlertPoint
@@ -93,8 +97,8 @@ const alertConfig = {
   volume: 0.8,
   points: [
     { seconds: 60, soundType: 'bell' },
-    { seconds: 0, soundType: 'gong' }
-  ]
+    { seconds: 0, soundType: 'gong' },
+  ],
 };
 ```
 
@@ -105,7 +109,7 @@ const alertConfig = {
 function migrateAlertConfig(config) {
   if (config.points.length > 0 && typeof config.points[0] === 'number') {
     // 旧形式を検出
-    config.points = config.points.map(seconds => ({
+    config.points = config.points.map((seconds) => ({
       seconds,
       soundType: SoundType.GONG, // デフォルトは銅鑼（仕様要件: FR-004）
     }));
@@ -127,11 +131,13 @@ function migrateAlertConfig(config) {
 **決定**: **選択肢2: AudioServiceに専用のpreviewメソッドを実装**
 
 **根拠**:
+
 - **責任分離**: プレビュー再生は通常のアラート再生と異なる（例：再生中の音を停止する必要がある）
 - **制御性**: プレビュー再生中のAudioBufferSourceNodeを追跡し、新しいプレビュー開始時に前の音を停止できる
 - **既存パターンとの一貫性**: AudioServiceに音声関連の機能を集約
 
 **実装詳細**:
+
 ```javascript
 class AudioService {
   constructor() {
@@ -177,12 +183,14 @@ class AudioService {
 **決定**: **選択肢1: 各アラートポイント入力行にセレクトボックスを配置**
 
 **根拠**:
+
 - **明確性**: 各アラートポイントに紐づく音が一目で分かる
 - **拡張性**: 将来的に音の種類を増やす場合、ラジオボタンよりセレクトボックスの方がスケールする
 - **既存UIとの一貫性**: 既存のフォーム要素パターンに合致
 - **アクセシビリティ**: セレクトボックスはスクリーンリーダーで扱いやすい
 
 **実装詳細**:
+
 ```html
 <div class="alert-point-item">
   <input type="number" class="alert-point-item__input" value="60" />
@@ -208,12 +216,14 @@ class AudioService {
 **決定**: **選択肢1: MP3を継続使用**
 
 **根拠**:
+
 - **既存との一貫性**: 既存のgong.mp3と同じ形式で統一
 - **ブラウザサポート**: すべてのモダンブラウザでMP3をサポート
 - **ファイルサイズ**: 短い効果音（1～2秒）であればMP3でも十分小さい（10～30KB程度）
 - **変換不要**: 既存の音声ファイルをそのまま使用可能
 
 **サイズ目標**:
+
 - ベルの音: ~20KB
 - 銅鑼の音: ~20KB（既存）
 - 合計: ~40KB（パフォーマンス要件SC-002を満たすため）
@@ -231,11 +241,13 @@ class AudioService {
 **決定**: **選択肢3: フォールバック音声 + ユーザー通知**
 
 **根拠**:
+
 - **ユーザー体験**: 音が鳴らない状態を避け、少なくとも何らかの音が鳴る
 - **デバッグ可能性**: コンソールとUI両方でエラーを通知
 - **既存音声の活用**: 銅鑼の音が既に動作している場合、それをフォールバックとして使用
 
 **実装詳細**:
+
 ```javascript
 async initialize(soundConfigs) {
   const fallbackBuffer = this._audioBuffers.get(SoundType.GONG);
@@ -264,6 +276,7 @@ async initialize(soundConfigs) {
 ### Web Audio API - 複数音声の管理
 
 **調査結果**:
+
 - **単一AudioContext**: すべての音声バッファを1つのAudioContextで管理することが推奨されている
 - **AudioBufferの再利用**: 同じ音を複数回再生する場合、AudioBufferSourceNodeを都度作成し、AudioBufferを再利用する
 - **メモリ管理**: 使用しない音声バッファは適切に解放する
@@ -274,6 +287,7 @@ async initialize(soundConfigs) {
 ### localStorage - データ移行パターン
 
 **調査結果**:
+
 - **バージョニング**: 設定データにバージョン番号を含めることがベストプラクティス
 - **マイグレーション**: アプリケーション起動時に古い形式を検出し、自動変換する
 
@@ -283,6 +297,7 @@ StorageServiceに`migrateAlertConfig`関数を追加し、古い形式を検出�
 ### アクセシビリティ - 音声UI
 
 **調査結果**:
+
 - **ARIA属性**: 音声プレビューボタンには適切なaria-labelを設定
 - **キーボード操作**: すべての音選択UIはキーボードのみで操作可能にする
 - **フォーカス管理**: プレビュー再生中もフォーカスを適切に維持

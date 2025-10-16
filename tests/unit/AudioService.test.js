@@ -94,9 +94,7 @@ describe('AudioService', () => {
     });
 
     it('should not re-initialize if already initialized', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
 
       await audioService.initialize(soundConfigs);
       const firstCallCount = global.fetch.mock.calls.length;
@@ -132,9 +130,7 @@ describe('AudioService', () => {
     });
 
     it('should create AudioContext and GainNode', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
 
       await audioService.initialize(soundConfigs);
 
@@ -145,9 +141,7 @@ describe('AudioService', () => {
     it('should set gain node value to current volume', async () => {
       audioService.setVolume(0.5);
 
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
 
       await audioService.initialize(soundConfigs);
 
@@ -172,10 +166,7 @@ describe('AudioService', () => {
     });
 
     it('should play specified sound type', () => {
-      const createBufferSourceSpy = vi.spyOn(
-        audioService._audioContext,
-        'createBufferSource'
-      );
+      const createBufferSourceSpy = vi.spyOn(audioService._audioContext, 'createBufferSource');
 
       audioService.play(SoundType.BELL);
 
@@ -184,10 +175,7 @@ describe('AudioService', () => {
 
     it('should not play if not initialized', () => {
       const uninitializedService = new AudioService();
-      const createBufferSourceSpy = vi.spyOn(
-        MockAudioContext.prototype,
-        'createBufferSource'
-      );
+      const createBufferSourceSpy = vi.spyOn(MockAudioContext.prototype, 'createBufferSource');
 
       uninitializedService.play(SoundType.BELL);
 
@@ -199,9 +187,7 @@ describe('AudioService', () => {
 
       audioService.play('invalid-sound');
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Sound type not found')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Sound type not found'));
 
       consoleWarnSpy.mockRestore();
     });
@@ -248,10 +234,7 @@ describe('AudioService', () => {
     });
 
     it('should preview specified sound type', () => {
-      const createBufferSourceSpy = vi.spyOn(
-        audioService._audioContext,
-        'createBufferSource'
-      );
+      const createBufferSourceSpy = vi.spyOn(audioService._audioContext, 'createBufferSource');
 
       audioService.preview(SoundType.BELL);
 
@@ -272,10 +255,7 @@ describe('AudioService', () => {
 
     it('should not preview if not initialized', () => {
       const uninitializedService = new AudioService();
-      const createBufferSourceSpy = vi.spyOn(
-        MockAudioContext.prototype,
-        'createBufferSource'
-      );
+      const createBufferSourceSpy = vi.spyOn(MockAudioContext.prototype, 'createBufferSource');
 
       uninitializedService.preview(SoundType.BELL);
 
@@ -287,9 +267,7 @@ describe('AudioService', () => {
 
       audioService.preview('invalid-sound');
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Sound type not found')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Sound type not found'));
 
       consoleWarnSpy.mockRestore();
     });
@@ -337,9 +315,7 @@ describe('AudioService', () => {
     });
 
     it('should update gain node value if initialized', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       audioService.setVolume(0.3);
@@ -356,9 +332,7 @@ describe('AudioService', () => {
 
   describe('dispose', () => {
     it('should close AudioContext', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       const closeSpy = vi.spyOn(audioService._audioContext, 'close');
@@ -370,9 +344,7 @@ describe('AudioService', () => {
     });
 
     it('should stop preview source before disposing', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       audioService.preview(SoundType.BELL);
@@ -397,9 +369,7 @@ describe('AudioService', () => {
     });
 
     it('should handle errors when stopping preview source', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       audioService.preview(SoundType.BELL);
@@ -419,18 +389,14 @@ describe('AudioService', () => {
     });
 
     it('should return true after initialization', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       expect(audioService.isInitialized()).toBe(true);
     });
 
     it('should return false after dispose', async () => {
-      const soundConfigs = [
-        { type: SoundType.BELL, url: '/assets/sounds/bell.mp3' },
-      ];
+      const soundConfigs = [{ type: SoundType.BELL, url: '/assets/sounds/bell.mp3' }];
       await audioService.initialize(soundConfigs);
 
       audioService.dispose();

@@ -5,7 +5,7 @@
  */
 
 // キャッシュバージョン - 更新時にインクリメントする
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.1.0';
 const CACHE_NAME = `presentation-timer-${CACHE_VERSION}`;
 
 // キャッシュするリソース一覧
@@ -18,13 +18,15 @@ const STATIC_ASSETS = [
   '/presentation-timer/js/models/TimerState.js',
   '/presentation-timer/js/models/TimerConfig.js',
   '/presentation-timer/js/models/AlertConfig.js',
+  '/presentation-timer/js/models/SoundType.js',
   '/presentation-timer/js/services/TimerService.js',
   '/presentation-timer/js/services/StorageService.js',
   '/presentation-timer/js/services/AudioService.js',
   '/presentation-timer/js/ui/TimerDisplay.js',
   '/presentation-timer/js/ui/ControlPanel.js',
   '/presentation-timer/js/ui/SettingsPanel.js',
-  '/presentation-timer/assets/sounds/alert.mp3',
+  '/presentation-timer/assets/sounds/bell.mp3',
+  '/presentation-timer/assets/sounds/gong.mp3',
 ];
 
 /**

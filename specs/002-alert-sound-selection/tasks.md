@@ -20,6 +20,7 @@ description: 'Task list for alert sound selection feature implementation'
 ## Path Conventions
 
 This is a single-page web application. File paths follow this structure:
+
 - **Models**: `js/models/`
 - **Services**: `js/services/`
 - **UI Components**: `js/ui/`
@@ -79,14 +80,14 @@ This is a single-page web application. File paths follow this structure:
 - [x] T018 [US1] Implement updateAlertPointSound function in js/models/AlertConfig.js
 - [x] T019 [US1] Update addAlertPoint to support AlertPoint objects in js/models/AlertConfig.js
 - [x] T020 [US1] Update isValidAlertConfig to validate AlertPoint array in js/models/AlertConfig.js
-- [x] T021 [US1] Extend AudioService._audioBuffers to Map<SoundType, AudioBuffer> in js/services/AudioService.js
+- [x] T021 [US1] Extend AudioService.\_audioBuffers to Map<SoundType, AudioBuffer> in js/services/AudioService.js
 - [x] T022 [US1] Update AudioService.initialize to accept soundConfigs array in js/services/AudioService.js
 - [x] T023 [US1] Update AudioService.play to accept soundType parameter in js/services/AudioService.js
 - [x] T024 [US1] Add error handling and fallback for failed sound loads in js/services/AudioService.js
-- [x] T025 [US1] Update SettingsPanel._addAlertPoint to create AlertPoint with soundType in js/ui/SettingsPanel.js
+- [x] T025 [US1] Update SettingsPanel.\_addAlertPoint to create AlertPoint with soundType in js/ui/SettingsPanel.js
 - [x] T026 [US1] Add sound selection dropdown to alert point UI in js/ui/SettingsPanel.js
-- [x] T027 [US1] Update SettingsPanel._getAlertConfig to read soundType from UI in js/ui/SettingsPanel.js
-- [x] T028 [US1] Update SettingsPanel._loadSettings to render soundType in dropdown in js/ui/SettingsPanel.js
+- [x] T027 [US1] Update SettingsPanel.\_getAlertConfig to read soundType from UI in js/ui/SettingsPanel.js
+- [x] T028 [US1] Update SettingsPanel.\_loadSettings to render soundType in dropdown in js/ui/SettingsPanel.js
 - [x] T029 [US1] Update app.js to initialize AudioService with both bell and gong sounds in js/app.js
 - [x] T030 [US1] Update TimerService to pass soundType to AudioService.play in js/services/TimerService.js
 
@@ -102,17 +103,17 @@ This is a single-page web application. File paths follow this structure:
 
 ### Tests for User Story 2 (TDD Required) ⚠️
 
-- [ ] T031 [P] [US2] Unit test for migrateAlertConfig with old format data in tests/unit/StorageService.test.js
-- [ ] T032 [P] [US2] Unit test for migrateAlertConfig with new format data in tests/unit/StorageService.test.js
-- [ ] T033 [P] [US2] Integration test for data migration on app load in tests/integration/TimerFlow.test.js
+- [x] T031 [P] [US2] Unit test for migrateAlertConfig with old format data in tests/unit/StorageService.test.js
+- [x] T032 [P] [US2] Unit test for migrateAlertConfig with new format data in tests/unit/StorageService.test.js
+- [x] T033 [P] [US2] Integration test for data migration on app load in tests/integration/TimerFlow.test.js
 
 ### Implementation for User Story 2
 
-- [ ] T034 [US2] Implement migrateAlertConfig function in js/services/StorageService.js
-- [ ] T035 [US2] Update StorageService.loadAlertConfig to call migrateAlertConfig in js/services/StorageService.js
-- [ ] T036 [US2] Ensure new alert points default to GONG soundType in js/models/AlertConfig.js (verify createAlertPoint)
-- [ ] T037 [US2] Update SettingsPanel._addAlertPoint to default soundType to GONG in js/ui/SettingsPanel.js
-- [ ] T038 [US2] Add visual indicator showing current default sound in js/ui/SettingsPanel.js
+- [x] T034 [US2] Implement migrateAlertConfig function in js/services/StorageService.js
+- [x] T035 [US2] Update StorageService.loadAlertConfig to call migrateAlertConfig in js/services/StorageService.js
+- [x] T036 [US2] Ensure new alert points default to GONG soundType in js/models/AlertConfig.js (verify createAlertPoint)
+- [x] T037 [US2] Update SettingsPanel.\_addAlertPoint to default soundType to GONG in js/ui/SettingsPanel.js
+- [x] T038 [US2] Add visual indicator showing current default sound in js/ui/SettingsPanel.js
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -126,18 +127,18 @@ This is a single-page web application. File paths follow this structure:
 
 ### Tests for User Story 3 (TDD Required) ⚠️
 
-- [ ] T039 [P] [US3] Unit test for AudioService.preview method in tests/unit/AudioService.test.js
-- [ ] T040 [P] [US3] Unit test for preview stopping previous sound in tests/unit/AudioService.test.js
-- [ ] T041 [P] [US3] E2E test for preview button functionality in tests/e2e/userJourney.spec.js
+- [x] T039 [P] [US3] Unit test for AudioService.preview method in tests/unit/AudioService.test.js
+- [x] T040 [P] [US3] Unit test for preview stopping previous sound in tests/unit/AudioService.test.js
+- [x] T041 [P] [US3] E2E test for preview button functionality in tests/e2e/userJourney.spec.js
 
 ### Implementation for User Story 3
 
-- [ ] T042 [US3] Add _previewSource field to AudioService in js/services/AudioService.js
-- [ ] T043 [US3] Implement AudioService.preview(soundType) method in js/services/AudioService.js
-- [ ] T044 [US3] Add preview button to each alert point row in js/ui/SettingsPanel.js
-- [ ] T045 [US3] Wire preview button click to AudioService.preview in js/ui/SettingsPanel.js
-- [ ] T046 [US3] Add ARIA labels and accessibility attributes to preview buttons in js/ui/SettingsPanel.js
-- [ ] T047 [US3] Pass AudioService instance to SettingsPanel in js/app.js
+- [x] T042 [US3] Add \_previewSource field to AudioService in js/services/AudioService.js
+- [x] T043 [US3] Implement AudioService.preview(soundType) method in js/services/AudioService.js
+- [x] T044 [US3] Add preview button to each alert point row in js/ui/SettingsPanel.js
+- [x] T045 [US3] Wire preview button click to AudioService.preview in js/ui/SettingsPanel.js
+- [x] T046 [US3] Add ARIA labels and accessibility attributes to preview buttons in js/ui/SettingsPanel.js
+- [x] T047 [US3] Pass AudioService instance to SettingsPanel in js/app.js
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -147,17 +148,17 @@ This is a single-page web application. File paths follow this structure:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T048 [P] Add CSS styles for sound selection dropdown in css/main.css
-- [ ] T049 [P] Add CSS styles for preview buttons in css/main.css
-- [ ] T050 [P] Ensure responsive design for new UI elements in css/responsive.css
-- [ ] T051 [P] Update README.md with alert sound selection feature description
-- [ ] T052 [P] Add JSDoc comments to all new public APIs
-- [ ] T053 Run npm run lint and fix all linting errors
-- [ ] T054 Run npm run format to format all modified files
+- [x] T048 [P] Add CSS styles for sound selection dropdown in css/main.css
+- [x] T049 [P] Add CSS styles for preview buttons in css/main.css
+- [x] T050 [P] Ensure responsive design for new UI elements in css/responsive.css
+- [x] T051 [P] Update README.md with alert sound selection feature description
+- [x] T052 [P] Add JSDoc comments to all new public APIs
+- [x] T053 Run npm run lint and fix all linting errors
+- [x] T054 Run npm run format to format all modified files
 - [ ] T055 Run npm run type-check and fix all type errors
-- [ ] T056 Run npm run test and ensure 80%+ coverage
+- [x] T056 Run npm run test and ensure 80%+ coverage
 - [ ] T057 Run npm run test:e2e and verify all E2E tests pass
-- [ ] T058 Update service worker (sw.js) to cache new sound files
+- [x] T058 Update service worker (sw.js) to cache new sound files
 - [ ] T059 Test offline functionality with both sound files
 - [ ] T060 Run quickstart.md validation steps
 - [ ] T061 Performance audit: verify SC-002 (preview < 0.5s)
@@ -194,6 +195,7 @@ This is a single-page web application. File paths follow this structure:
 ### Parallel Opportunities
 
 **Setup Phase (Phase 1)**:
+
 ```
 T001 [P] SoundType.js
 T002 [P] bell.mp3
@@ -201,6 +203,7 @@ T003 [P] gong.mp3 verification
 ```
 
 **User Story 1 Tests**:
+
 ```
 T007 [P] SoundType.test.js
 T008 [P] AlertConfig.test.js (AlertPoint)
@@ -211,6 +214,7 @@ T012 [P] TimerFlow.test.js (integration)
 ```
 
 **User Story 2 Tests**:
+
 ```
 T031 [P] StorageService.test.js (migration old)
 T032 [P] StorageService.test.js (migration new)
@@ -218,6 +222,7 @@ T033 [P] TimerFlow.test.js (migration)
 ```
 
 **User Story 3 Tests**:
+
 ```
 T039 [P] AudioService.test.js (preview)
 T040 [P] AudioService.test.js (preview stop)
@@ -225,6 +230,7 @@ T041 [P] userJourney.spec.js (E2E)
 ```
 
 **Polish Phase**:
+
 ```
 T048 [P] main.css (dropdown)
 T049 [P] main.css (preview button)
