@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
-package-lock.json
+# package-lock.json should be committed for CI/CD consistency
+# package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
