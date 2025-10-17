@@ -323,8 +323,13 @@ function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        const registration = await navigator.serviceWorker.register('/presentation-timer/sw.js', {
-          scope: '/presentation-timer/',
+        // ベースURLを取得（開発環境: '/', 本番環境: '/presentation-timer/'）
+        const baseUrl = import.meta.env.BASE_URL || '/';
+        const swPath = `${baseUrl}sw.js`;
+        const scope = baseUrl;
+
+        const registration = await navigator.serviceWorker.register(swPath, {
+          scope: scope,
         });
 
         // eslint-disable-next-line no-console

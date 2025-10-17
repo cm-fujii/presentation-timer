@@ -5,28 +5,31 @@
  */
 
 // キャッシュバージョン - 更新時にインクリメントする
-const CACHE_VERSION = 'v1.2.0';
+const CACHE_VERSION = 'v1.2.1';
 const CACHE_NAME = `presentation-timer-${CACHE_VERSION}`;
+
+// ベースパスを検出（開発環境: '/', 本番環境: '/presentation-timer/'）
+const BASE_PATH = self.location.pathname.includes('/presentation-timer/') ? '/presentation-timer' : '';
 
 // キャッシュするリソース一覧
 const STATIC_ASSETS = [
-  '/presentation-timer/',
-  '/presentation-timer/index.html',
-  '/presentation-timer/css/main.css',
-  '/presentation-timer/css/responsive.css',
-  '/presentation-timer/js/app.js',
-  '/presentation-timer/js/models/TimerState.js',
-  '/presentation-timer/js/models/TimerConfig.js',
-  '/presentation-timer/js/models/AlertConfig.js',
-  '/presentation-timer/js/models/SoundType.js',
-  '/presentation-timer/js/services/TimerService.js',
-  '/presentation-timer/js/services/StorageService.js',
-  '/presentation-timer/js/services/AudioService.js',
-  '/presentation-timer/js/ui/TimerDisplay.js',
-  '/presentation-timer/js/ui/ControlPanel.js',
-  '/presentation-timer/js/ui/SettingsPanel.js',
-  '/presentation-timer/assets/sounds/bell.mp3',
-  '/presentation-timer/assets/sounds/gong.mp3',
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/css/main.css`,
+  `${BASE_PATH}/css/responsive.css`,
+  `${BASE_PATH}/js/app.js`,
+  `${BASE_PATH}/js/models/TimerState.js`,
+  `${BASE_PATH}/js/models/TimerConfig.js`,
+  `${BASE_PATH}/js/models/AlertConfig.js`,
+  `${BASE_PATH}/js/models/SoundType.js`,
+  `${BASE_PATH}/js/services/TimerService.js`,
+  `${BASE_PATH}/js/services/StorageService.js`,
+  `${BASE_PATH}/js/services/AudioService.js`,
+  `${BASE_PATH}/js/ui/TimerDisplay.js`,
+  `${BASE_PATH}/js/ui/ControlPanel.js`,
+  `${BASE_PATH}/js/ui/SettingsPanel.js`,
+  `${BASE_PATH}/assets/sounds/bell.mp3`,
+  `${BASE_PATH}/assets/sounds/gong.mp3`,
 ];
 
 /**
@@ -106,7 +109,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   const url = new URL(event.request.url);
-  const isHTMLRequest = url.pathname.endsWith('.html') || url.pathname === '/presentation-timer/' || url.pathname === '/';
+  const isHTMLRequest = url.pathname.endsWith('.html') ||
+                        url.pathname === `${BASE_PATH}/` ||
+                        url.pathname === '/' ||
+                        url.pathname === BASE_PATH;
 
   if (isHTMLRequest) {
     // HTMLファイルはNetwork-First戦略
@@ -136,7 +142,7 @@ self.addEventListener('fetch', (event) => {
             }
 
             // HTMLのキャッシュがない場合はindex.htmlにフォールバック
-            return caches.match('/presentation-timer/index.html');
+            return caches.match(`${BASE_PATH}/index.html`);
           });
         })
     );
