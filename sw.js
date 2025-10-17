@@ -5,7 +5,7 @@
  */
 
 // キャッシュバージョン - 更新時にインクリメントする
-const CACHE_VERSION = 'v1.1.0';
+const CACHE_VERSION = 'v1.2.0';
 const CACHE_NAME = `presentation-timer-${CACHE_VERSION}`;
 
 // キャッシュするリソース一覧
@@ -96,7 +96,8 @@ self.addEventListener('activate', (event) => {
  *
  * @description
  * ネットワークリクエストをインターセプトします。
- * Cache-First戦略: キャッシュを優先し、なければネットワークから取得
+ * HTMLファイル: Network-First戦略（常に最新版を取得、失敗時のみキャッシュ）
+ * その他のアセット: Cache-First戦略（キャッシュを優先、なければネットワーク）
  */
 self.addEventListener('fetch', (event) => {
   // GETリクエストのみキャッシュ
@@ -104,45 +105,83 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(
-    caches
-      .match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          console.log('[Service Worker] Cache hit:', event.request.url);
-          return cachedResponse;
-        }
+  const url = new URL(event.request.url);
+  const isHTMLRequest = url.pathname.endsWith('.html') || url.pathname === '/presentation-timer/' || url.pathname === '/';
 
-        console.log('[Service Worker] Cache miss, fetching from network:', event.request.url);
+  if (isHTMLRequest) {
+    // HTMLファイルはNetwork-First戦略
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // ネットワークから取得成功
+          console.log('[Service Worker] Network-First: Fetched from network:', event.request.url);
 
-        // キャッシュになければネットワークから取得
-        return fetch(event.request)
-          .then((response) => {
-            // レスポンスが有効でない場合はそのまま返す
-            if (!response || response.status !== 200 || response.type === 'error') {
-              return response;
-            }
-
-            // レスポンスをクローンしてキャッシュに保存
+          // レスポンスが有効な場合はキャッシュに保存
+          if (response && response.status === 200 && response.type !== 'error') {
             const responseToCache = response.clone();
-
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, responseToCache);
             });
+          }
 
-            return response;
-          })
-          .catch((error) => {
-            console.error('[Service Worker] Fetch failed:', error);
-            // オフライン時はキャッシュからフォールバック
+          return response;
+        })
+        .catch((error) => {
+          // ネットワーク取得失敗（オフライン時）
+          console.log('[Service Worker] Network-First: Network failed, using cache:', event.request.url);
+
+          return caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+
+            // HTMLのキャッシュがない場合はindex.htmlにフォールバック
             return caches.match('/presentation-timer/index.html');
           });
-      })
-      .catch((error) => {
-        console.error('[Service Worker] Cache match failed:', error);
-        return fetch(event.request);
-      })
-  );
+        })
+    );
+  } else {
+    // その他のアセット（CSS、JS、画像、音声）はCache-First戦略
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            console.log('[Service Worker] Cache-First: Cache hit:', event.request.url);
+            return cachedResponse;
+          }
+
+          console.log('[Service Worker] Cache-First: Cache miss, fetching from network:', event.request.url);
+
+          // キャッシュになければネットワークから取得
+          return fetch(event.request)
+            .then((response) => {
+              // レスポンスが有効でない場合はそのまま返す
+              if (!response || response.status !== 200 || response.type === 'error') {
+                return response;
+              }
+
+              // レスポンスをクローンしてキャッシュに保存
+              const responseToCache = response.clone();
+
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+              return response;
+            })
+            .catch((error) => {
+              console.error('[Service Worker] Fetch failed:', error);
+              // オフライン時はキャッシュからフォールバック
+              return caches.match(event.request);
+            });
+        })
+        .catch((error) => {
+          console.error('[Service Worker] Cache match failed:', error);
+          return fetch(event.request);
+        })
+    );
+  }
 });
 
 /**

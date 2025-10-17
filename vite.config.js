@@ -11,6 +11,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: undefined,
+        // ファイル名にハッシュを付与してキャッシュバスティング
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
   },
