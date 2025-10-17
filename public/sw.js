@@ -9,7 +9,9 @@ const CACHE_VERSION = 'v1.2.1';
 const CACHE_NAME = `presentation-timer-${CACHE_VERSION}`;
 
 // ベースパスを検出（開発環境: '/', 本番環境: '/presentation-timer/'）
-const BASE_PATH = self.location.pathname.includes('/presentation-timer/') ? '/presentation-timer' : '';
+const BASE_PATH = self.location.pathname.includes('/presentation-timer/')
+  ? '/presentation-timer'
+  : '';
 
 // キャッシュするリソース一覧
 const STATIC_ASSETS = [
@@ -109,10 +111,11 @@ self.addEventListener('fetch', (event) => {
   }
 
   const url = new URL(event.request.url);
-  const isHTMLRequest = url.pathname.endsWith('.html') ||
-                        url.pathname === `${BASE_PATH}/` ||
-                        url.pathname === '/' ||
-                        url.pathname === BASE_PATH;
+  const isHTMLRequest =
+    url.pathname.endsWith('.html') ||
+    url.pathname === `${BASE_PATH}/` ||
+    url.pathname === '/' ||
+    url.pathname === BASE_PATH;
 
   if (isHTMLRequest) {
     // HTMLファイルはNetwork-First戦略
@@ -134,7 +137,10 @@ self.addEventListener('fetch', (event) => {
         })
         .catch((error) => {
           // ネットワーク取得失敗（オフライン時）
-          console.log('[Service Worker] Network-First: Network failed, using cache:', event.request.url);
+          console.log(
+            '[Service Worker] Network-First: Network failed, using cache:',
+            event.request.url
+          );
 
           return caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
@@ -157,7 +163,10 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
 
-          console.log('[Service Worker] Cache-First: Cache miss, fetching from network:', event.request.url);
+          console.log(
+            '[Service Worker] Cache-First: Cache miss, fetching from network:',
+            event.request.url
+          );
 
           // キャッシュになければネットワークから取得
           return fetch(event.request)
